@@ -1,0 +1,51 @@
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+.page-header {
+    margin-bottom: 30px;
+    text-align: center;
+    margin-top: 30px;
+   
+}
+
+.page-header h1{
+    text-align: center;
+    color: rgb(9, 44, 9);
+}
+.page-header p{
+    margin-bottom: 30px;
+    text-align: center;
+    color: grey;
+}
+
+.container{
+    width: 900px;
+    margin: 0 auto;
+  
+}
+
+.announcement-card {
+    background: #fff;
+    padding: 15px;  
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+}
+
+.announcement-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #16a085;
+}
+
+.announcement-meta {
+    font-size: 14px;
+    color: gray;
+}
+
+.announcement-message {
+    font-size: 16px;
+    margin-top: 10px;
+}

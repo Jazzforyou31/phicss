@@ -1,0 +1,328 @@
+/* Admin Dashboard Content CSS - Enhanced Version */
+
+:root {
+    --primary-color: #0B2603;
+    --primary-light: rgba(11, 38, 3, 0.8);
+    --accent-color: #4CAF50;
+    --accent-hover: #3e8e41;
+    --text-light: #f8f8f8;
+    --text-dark: #333;
+    --text-muted: #6c757d;
+    --bg-light: #f8f9fa;
+    --bg-white: #ffffff;
+    --border-color: #e9ecef;
+    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.05);
+    --transition-speed: 0.3s;
+    --border-radius: 8px;
+    --border-radius-sm: 4px;
+}
+
+.content {
+    padding: 25px;
+}
+
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    font-size: 28px;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.page-header p {
+    font-size: 16px;
+    color: var(--text-muted);
+}
+
+/* Dashboard Stats */
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background-color: var(--bg-white);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    border: 1px solid var(--border-color);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    margin-right: 18px;
+    font-size: 24px;
+    color: white;
+}
+
+.stat-icon.users {
+    background-color: var(--accent-color);
+}
+
+.stat-icon.events {
+    background-color: #2196F3;
+}
+
+.stat-icon.content {
+    background-color: #9C27B0;
+}
+
+.stat-icon.activity {
+    background-color: #FF9800;
+}
+
+.stat-info h3 {
+    font-size: 15px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.stat-info p {
+    font-size: 24px;
+    color: var(--text-dark);
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Dashboard Widgets */
+.dashboard-widgets {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+}
+
+.widget {
+    background-color: var(--bg-white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: box-shadow var(--transition-speed) ease;
+}
+
+.widget:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 25px;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-light);
+}
+
+.widget-header h2 {
+    font-size: 18px;
+    color: var(--text-dark);
+    font-weight: 600;
+    margin: 0;
+}
+
+.view-all {
+    font-size: 14px;
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color var(--transition-speed) ease;
+}
+
+.view-all:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+.widget-content {
+    padding: 25px;
+}
+
+/* Activity List */
+.activity-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.activity-list li {
+    display: flex;
+    align-items: flex-start;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.activity-list li:first-child {
+    padding-top: 0;
+}
+
+.activity-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.activity-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: rgba(76, 175, 80, 0.1);
+    color: var(--accent-color);
+    margin-right: 15px;
+    font-size: 16px;
+}
+
+.activity-details p {
+    margin: 0 0 5px 0;
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.activity-time {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+/* Quick Actions */
+.action-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 25px 20px;
+    border-radius: var(--border-radius);
+    background-color: var(--bg-light);
+    text-decoration: none;
+    color: var(--text-dark);
+    transition: all var(--transition-speed) ease;
+    border: 1px solid var(--border-color);
+}
+
+.action-btn:hover {
+    background-color: var(--bg-white);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-sm);
+}
+
+.action-btn i {
+    font-size: 24px;
+    margin-bottom: 12px;
+    color: var(--accent-color);
+    transition: transform var(--transition-speed) ease;
+}
+
+.action-btn:hover i {
+    transform: scale(1.1);
+}
+
+.action-btn span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 1200px) {
+    .dashboard-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .dashboard-widgets {
+        grid-template-columns: 1fr;
+    }
+    
+    .content {
+        padding: 20px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .stat-card {
+        padding: 20px;
+    }
+    
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .stat-info h3 {
+        font-size: 14px;
+    }
+    
+    .stat-info p {
+        font-size: 20px;
+    }
+    
+    .dashboard-widgets {
+        gap: 20px;
+    }
+    
+    .widget-header, .widget-content {
+        padding: 15px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .page-header h1 {
+        font-size: 24px;
+    }
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    color: var(--primary-color);
+    font-size: 18px;
+}
+
+.loading-spinner i {
+    font-size: 24px;
+    margin-right: 10px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+} 

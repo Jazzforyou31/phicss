@@ -1,0 +1,37 @@
+UPDATE POST data received: Array
+(
+    [user_id] => 1
+    [username] => nice
+    [first_name] => nice
+    [middle_name] => nice
+    [last_name] => nice
+    [email] => nice@gmail.com
+    [role] => Moderator
+)
+
+Processed update form data: userId=1, username=nice, firstName=nice, middleName=nice, lastName=nice, email=nice@gmail.com, role=Moderator
+Update result: successUPDATE POST data received: Array
+(
+    [user_id] => 1
+    [username] => nice
+    [first_name] => nice
+    [middle_name] => nice
+    [last_name] => nice
+    [email] => nice@gmail.com
+    [role] => Admin
+)
+
+Processed update form data: userId=1, username=nice, firstName=nice, middleName=nice, lastName=nice, email=nice@gmail.com, role=Admin
+Update result: successUPDATE POST data received: Array
+(
+    [user_id] => 1
+    [username] => nice
+    [first_name] => nice
+    [middle_name] => nice
+    [last_name] => nice
+    [email] => nice@gmail.com
+    [role] => Moderator
+)
+
+Processed update form data: userId=1, username=nice, firstName=nice, middleName=nice, lastName=nice, email=nice@gmail.com, role=Moderator
+Update result: success

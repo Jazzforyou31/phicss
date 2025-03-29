@@ -1,0 +1,52 @@
+POST data received: Array
+(
+    [username] => jazzy23
+    [first_name] => Jazzper
+    [middle_name] => Dimain
+    [last_name] => Roque
+    [email] => jazzypark456hd@gmail.com
+    [password] => JazzRoque12345#
+    [confirm_password] => JazzRoque12345#
+    [role] => Admin
+)
+
+Processed form data: username=jazzy23, firstName=Jazzper, middleName=Dimain, lastName=Roque, email=jazzypark456hd@gmail.com, role=Admin, password_length=15
+Registration result: successPOST data received: Array
+(
+    [username] => brex23
+    [first_name] => Brixell
+    [middle_name] => Dela Cruz
+    [last_name] => Mesa
+    [email] => Mesa@gmail.com
+    [password] => 12345
+    [confirm_password] => 12345
+    [role] => Moderator
+)
+
+Processed form data: username=brex23, firstName=Brixell, middleName=Dela Cruz, lastName=Mesa, email=Mesa@gmail.com, role=Moderator, password_length=5POST data received: Array
+(
+    [username] => brex23
+    [first_name] => Brixell
+    [middle_name] => Dela Cruz
+    [last_name] => Mesa
+    [email] => Mesa@gmail.com
+    [password] => 123456
+    [confirm_password] => 123456
+    [role] => Moderator
+)
+
+Processed form data: username=brex23, firstName=Brixell, middleName=Dela Cruz, lastName=Mesa, email=Mesa@gmail.com, role=Moderator, password_length=6
+Registration result: successPOST data received: Array
+(
+    [username] => sheesh21
+    [first_name] => Reymard
+    [middle_name] => Torino
+    [last_name] => Bengil
+    [email] => bengil@gmail.com
+    [password] => 123456
+    [confirm_password] => 123456
+    [role] => Admin
+)
+
+Processed form data: username=sheesh21, firstName=Reymard, middleName=Torino, lastName=Bengil, email=bengil@gmail.com, role=Admin, password_length=6
+Registration result: success

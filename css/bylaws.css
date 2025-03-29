@@ -1,0 +1,128 @@
+body, button, input, select, textarea {
+    font-family: 'Roboto', sans-serif;
+}
+
+.hero.bylaws-hero {
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 60px;
+    width: 100%;
+}
+
+.hero.bylaws-hero .hero-image {
+    height: 100%;
+    width: 100%;
+    background-image: url('');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    z-index: 5;
+    width: 100%;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.bylaws-content {
+    padding: 60px 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.bylaws-content h2 {
+    font-size: 2.2rem;
+    color: #333;
+    margin-bottom: 30px;
+    position: relative;
+    padding-bottom: 15px;
+    text-align: center;
+}
+
+.bylaws-content h2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: #4CAF50;
+}
+
+.bylaws-content p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.coming-soon {
+    margin-top: 50px;
+    padding: 40px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.coming-soon h3 {
+    font-size: 1.8rem;
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
+.coming-soon p {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+@media screen and (max-width: 768px) {
+    .hero.bylaws-hero {
+        height: 200px;
+    }
+    
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .bylaws-content h2 {
+        font-size: 1.8rem;
+    }
+    
+    .coming-soon {
+        padding: 30px 20px;
+    }
+    
+    .coming-soon h3 {
+        font-size: 1.5rem;
+    }
+} 

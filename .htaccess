@@ -1,0 +1,26 @@
+RewriteEngine On
+RewriteBase /phicss/
+
+# Prevent duplicate "phicss" in URL rewrites
+RewriteCond %{REQUEST_URI} ^/phicss/phicss [NC]
+RewriteRule ^phicss/(.*)$ /phicss/$1 [R=301,L]
+
+# Allow direct access to existing files and directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Exclude JSON API calls from being rewritten
+RewriteCond %{REQUEST_URI} \.json$ [NC]
+RewriteRule ^ - [L]
+
+# Remove .php extension and allow clean URLs
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+)$ $1.php [L]
+
+# Prevent direct .php access and enforce clean URLs
+RewriteCond %{THE_REQUEST} \s/([^.]+)\.php[\s?] [NC]
+RewriteRule ^ %1 [R=301,NE,L]
+
+# Custom 404 error page
+ErrorDocument 404 /phicss/404.php

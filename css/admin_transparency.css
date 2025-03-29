@@ -1,0 +1,300 @@
+/* Only apply these variables to the content area, not globally */
+.content {
+    --primary-color: #1e7e34;
+    --primary-dark: #145523;
+    --primary-light: #e8f5e9;
+    --secondary-color: #6c757d;
+    --success: #28a745;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --info: #17a2b8;
+    --text-dark: #343a40;
+    --text-light: #6c757d;
+    --bg-light: #f8f9fa;
+    --border-color: #dee2e6;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    
+    padding: 30px;
+    background-color: var(--bg-light);
+    width: 100%;
+    min-height: 100vh;
+}
+
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    font-size: 28px;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.page-header p {
+    font-size: 16px;
+    color: var(--text-light);
+    margin: 0;
+}
+
+/* Search and Button Container */
+.search-and-button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: white;
+    border-radius: var(--radius-md);
+    margin-bottom: 25px;
+    box-shadow: var(--shadow-sm);
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    width: 300px;
+}
+
+.search-container input[type="text"] {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-container input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(30, 126, 52, 0.1);
+}
+
+.search-container button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background-color: white;
+    color: var(--text-dark);
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    margin-left: 8px;
+    transition: all 0.2s ease;
+}
+
+.search-container button:hover {
+    background-color: var(--bg-light);
+}
+
+.search-container button i {
+    margin-right: 5px;
+    font-size: 12px;
+}
+
+.btn-success {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-success:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+/* Main Container Styling */
+.main-container {
+    display: flex;
+    align-items: flex-start;
+    padding: 25px;
+    background-color: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 20px;
+    position: relative;
+    transition: all 0.2s ease;
+    border-left: 4px solid var(--primary-color);
+}
+
+.main-container:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+/* Icon Container */
+.icon-container {
+    font-size: 36px;
+    color: var(--primary-color);
+    background-color: var(--primary-light);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+/* Inner Container Styling */
+.inner-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.section-title h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    padding-right: 80px; /* Space for action buttons */
+}
+
+.subsection p {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.content-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.content-links a {
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    color: var(--primary-color);
+    text-decoration: none;
+    padding: 6px 12px;
+    background-color: var(--primary-light);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+}
+
+.content-links a:hover {
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+}
+
+.content-links a::before {
+    content: "\f15c"; /* FontAwesome file icon */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 400;
+    margin-right: 6px;
+    font-size: 12px;
+}
+
+.content-links p {
+    font-size: 14px;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+.action-icons {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.action-icons button {
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-icons button:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-md);
+}
+
+.edit-btn {
+    color: var(--warning);
+}
+
+.delete-btn {
+    color: var(--danger);
+}
+
+.add-btn {
+    color: var(--success);
+}
+
+/* Empty state styling */
+.content > p {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: white;
+    border-radius: var(--radius-md);
+    color: var(--text-light);
+    font-size: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .content {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .search-container {
+        width: 100%;
+    }
+    
+    .search-and-button-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    
+    .main-container {
+        flex-direction: column;
+        padding: 20px;
+    }
+    
+    .icon-container {
+        margin-bottom: 15px;
+        margin-right: 0;
+    }
+    
+    .action-icons {
+        top: 15px;
+        right: 15px;
+    }
+    
+    .section-title h3 {
+        padding-right: 60px;
+    }
+    
+    .content-links {
+        flex-direction: column;
+    }
+}

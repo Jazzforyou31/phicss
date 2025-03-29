@@ -1,0 +1,7 @@
+DELETE POST data received: Array
+(
+    [user_id] => 3
+)
+
+Delete user ID: 3
+Delete result: success

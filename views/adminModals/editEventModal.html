@@ -1,0 +1,67 @@
+<div class="modal fade" id="editEventModal" tabindex="-1" aria-labelledby="editEventModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editEventModalLabel">Edit Event</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editEventForm" enctype="multipart/form-data">
+                <input type="hidden" name="event_id" id="edit_event_id">
+                <input type="hidden" name="current_image" id="current_image">
+                
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="edit_event_name" class="form-label">Event Name</label>
+                                <input type="text" class="form-control" id="edit_event_name" name="event_name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_event_category" class="form-label">Category</label>
+                                <input type="text" class="form-control" id="edit_event_category" name="event_category" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_event_audience" class="form-label">Audience</label>
+                                <input type="text" class="form-control" id="edit_event_audience" name="event_audience" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_event_venue" class="form-label">Venue</label>
+                                <input type="text" class="form-control" id="edit_event_venue" name="event_venue" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="edit_event_start_date" class="form-label">Start Date</label>
+                                <input type="datetime-local" class="form-control" id="edit_event_start_date" name="event_start_date" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_event_end_date" class="form-label">End Date</label>
+                                <input type="datetime-local" class="form-control" id="edit_event_end_date" name="event_end_date" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_event_image" class="form-label">Event Image</label>
+                                <input type="file" class="form-control" id="edit_event_image" name="event_image" accept="image/*">
+                                <small class="text-muted">Leave empty to keep current image</small>
+                                <div class="mt-2">
+                                    <img id="current_image_preview" src="" class="img-thumbnail" style="max-height: 150px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_event_description" class="form-label">Description</label>
+                        <textarea class="form-control" id="edit_event_description" name="event_description" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_assigned_officers" class="form-label">Assigned Officers</label>
+                        <textarea class="form-control" id="edit_assigned_officers" name="assigned_officers" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

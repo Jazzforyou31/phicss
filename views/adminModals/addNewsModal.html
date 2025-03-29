@@ -1,0 +1,44 @@
+<!-- Add News Modal -->
+<div class="modal fade" id="newsModal" tabindex="-1" aria-labelledby="newsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newsModalLabel">Add New Article</h5>
+                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addNewsForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="news_title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="news_title" name="news_title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="news_description" class="form-label">Description</label>
+                        <textarea class="form-control" id="news_description" name="news_description" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message (Optional)</label>
+                        <textarea class="form-control" id="message" name="message" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <label for="author" class="form-label">Author</label>
+                        <input type="text" class="form-control" id="author" name="author" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="news_date" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="news_date" name="news_date" required value="<?php echo date('Y-m-d'); ?>">
+                    </div>
+                    <div id="formMessage" class="alert d-none"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" form="addNewsForm">Save Article</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,272 @@
+body, button, input, select, textarea {
+    font-family: 'Roboto', sans-serif;
+}
+
+
+.hero.about-hero {
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 60px;
+    width: 100%;
+}
+
+.hero.about-hero .hero-image {
+    height: 100%;
+    width: 100%;
+    background-image: url('');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    z-index: 5;
+    width: 100%;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+
+.about-description {
+    padding: 60px 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.about-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.about-content h2 {
+    font-size: 2.2rem;
+    color: #333;
+    margin-bottom: 30px;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.about-content h2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: #4CAF50;
+}
+
+.about-content p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+
+.mission-vision-section {
+    padding: 60px 0;
+    background-color: #f9f9f9;
+}
+
+.mv-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 40px;
+}
+
+.mv-image {
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
+}
+
+.mv-image img {
+    max-width: 100%;
+    height: auto;
+    max-height: 400px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.mv-content {
+    flex: 2;
+    min-width: 300px;
+}
+
+.mission, .vision {
+    margin-bottom: 30px;
+}
+
+.mission h2, .vision h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 15px;
+    position: relative;
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+.mission h2:after, .vision h2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background-color: #4CAF50;
+}
+
+.mission p, .vision p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+}
+
+
+.officers-section {
+    padding: 80px 0;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.2rem;
+    color: #333;
+    margin-bottom: 50px;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.section-title:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: #4CAF50;
+}
+
+.officers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 40px;
+}
+
+.officer-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.officer-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.officer-image {
+    height: 250px;
+    overflow: hidden;
+}
+
+.officer-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.officer-card:hover .officer-image img {
+    transform: scale(1.05);
+}
+
+.officer-info {
+    padding: 20px;
+    text-align: center;
+}
+
+.officer-info h3 {
+    font-size: 1.4rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.officer-info .position {
+    font-size: 1.1rem;
+    color: #4CAF50;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.officer-info .bio {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.6;
+}
+
+
+@media screen and (max-width: 768px) {
+    .hero.about-hero {
+        height: 300px;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+    
+    .about-content h2, .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .mission h2, .vision h2 {
+        font-size: 1.5rem;
+    }
+    
+    .mv-container {
+        flex-direction: column;
+    }
+    
+    .mv-image {
+        order: 2;
+    }
+    
+    .mv-content {
+        order: 1;
+    }
+    
+    .officers-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+} 
