@@ -1,7 +1,7 @@
 $(document).ready(function () {
     function loadContent(target) {
         var contentArea = $("#content-area");
-        var url = target === "announcement" ? "../admin/announcement.php" : target;
+        var url = target === "announcement" ? "../admin/admin_announcement.php" : target;
 
         $(".nav-btn").removeClass("active");
         $(".nav-btn[data-target='" + target + "']").addClass("active");

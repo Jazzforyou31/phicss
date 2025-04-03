@@ -7,72 +7,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-        }
-
-        .content {
-            width: 100%; /* Take full viewport width */
-            padding: 0;
-        }
-
-        .page-header {
-            padding: 20px 0;
-            margin-bottom: 20px;
-        }
-
-        .contact-section {
-            margin-bottom: 20px;
-        }
-
-        .contact-box {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            margin-top: 5px;
-            background: #fff;
-        }
-
-        label {
-            font-weight: 500;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .contact-grid {
-            display: flex;
-            gap: 20px;
-        }
-
-        .contact-grid .contact-section {
-            flex: 1;
-        }
-
-        .time-input {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        @media (max-width: 768px) {
-            .contact-grid {
-                flex-direction: column;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/admin_contacts.css">
 </head>
 <body>
 

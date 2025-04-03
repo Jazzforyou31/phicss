@@ -1,0 +1,41 @@
+
+
+.content {
+    padding: 25px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.page-header {
+    margin-bottom: 25px;
+    border-left: 4px solid #28A745;
+    padding-left: 15px;
+}
+
+.page-header h1 {
+    font-size: 26px;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.page-header p {
+    font-size: 15px;
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+#categoryChips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center; /* Ensures vertical alignment */
+}
+.category-chip {
+    margin: 5px;
+    padding: 8px 12px;
+    font-size: 14px;
+    display: flex; /* Allows inline alignment of text and close button */
+    align-items: center; /* Aligns content vertically */
+}

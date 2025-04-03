@@ -63,8 +63,9 @@ session_start();
         <div class="container">
             <div class="nav-menu">
                 <button class="nav-btn" data-target="announcement">📢 Announcement</button>
-                <button class="nav-btn" data-target="about_phicss.php">ℹ️ About PhiCSS</button>
-                <button class="nav-btn" data-target="contacts.php">📞 Contacts</button>
+                <button class="nav-btn" data-target="admin_about_phicss.php">ℹ️ About PhiCSS</button>
+                <button class="nav-btn" data-target="admin_contacts.php">📞 Contacts</button>
+                <button class="nav-btn" data-target="admin_photos.php">🏷️ Others</button>
             </div>
     
         <div id="content-area" class="content-container">
