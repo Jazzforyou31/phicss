@@ -294,6 +294,51 @@ function loadSettingSection() {
     });
 }
 
+function loadCollectionSection() {
+    // Show loading indicator
+    $('#contentArea').html('<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</div>');
+    
+    $.ajax({
+        url: "../../views/admin/collection.php",
+        method: 'GET',
+        success: function (response) {
+            $('#contentArea').html(response);
+            // Update active state in sidebar
+            $('.menu-items li').removeClass('active');
+            $('.menu-items li a:contains("collection")').parent().addClass('active');
+            // Update page title
+            document.title = "Collection | PhiCCS Admin";
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading Collection section:', error);
+            $('#contentArea').html('<p class="text-danger">Failed to load collection section. Please try again.</p>');
+        }
+    });
+}
+
+function loadVolunteerSection() {
+    // Show loading indicator
+    $('#contentArea').html('<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</div>');
+    
+    $.ajax({
+        url: "../../views/admin/volunteers.php",
+        method: 'GET',
+        success: function (response) {
+            $('#contentArea').html(response);
+            // Update active state in sidebar
+            $('.menu-items li').removeClass('active');
+            $('.menu-items li a:contains("volunteer")').parent().addClass('active');
+            // Update page title
+            document.title = "Volunteer | PhiCCS Admin";
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading volunteer section:', error);
+            $('#contentArea').html('<p class="text-danger">Failed to load volunteer section. Please try again.</p>');
+        }
+    });
+}
+
+
 
 
 
