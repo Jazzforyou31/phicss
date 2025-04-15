@@ -7,7 +7,7 @@ $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
 $role = isset($_GET['role']) ? trim($_GET['role']) : '';
 
 // Create an instance of AccountClass
-$accountClass = new AccountClass();
+$accountClass = new Account();
 
 // Get filtered users
 $userList = $accountClass->searchUsers($searchTerm, $role);

@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
         // Create an instance of AccountClass
-        $account = new AccountClass();
+        $account = new Account();
 
         // Update user information
         $result = $account->updateUser($userId, $username, $firstName, $middleName, $lastName, $email, $role);

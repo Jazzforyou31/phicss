@@ -1,7 +1,7 @@
 <?php
 require_once 'databaseClass.php';
 
-class AccountClass {
+class Account {
     private $db;
 
     public function __construct() {
@@ -39,6 +39,11 @@ class AccountClass {
 
     public function registerAccount($username, $password, $firstName, $middleName, $lastName, $email, $role) {
         try {
+            // Check if email already exists
+            if ($this->getUserByEmail($email)) {
+                return false;
+            }
+            
             // Hash the password before storing it
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             
@@ -68,6 +73,19 @@ class AccountClass {
         }
     }
 
+    public function getUserByEmail($email) {
+        try {
+            $query = "SELECT * FROM account WHERE email = :email";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching user by email: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function getUserById($userId) {
         try {
             $query = "
@@ -91,6 +109,58 @@ class AccountClass {
             return $statement->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $exception) {
             error_log("Error fetching user by ID: " . $exception->getMessage());
+            return false;
+        }
+    }
+
+    public function login($username, $password) {
+        try {
+            $query = "SELECT * FROM account WHERE username = :username";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':username', $username);
+            $stmt->execute();
+            
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($user) {
+                // Verify the password
+                if (password_verify($password, $user['password']) || $password === $user['password']) {
+                    // Update last online timestamp
+                    $this->updateLastOnline($user['user_id']);
+                    return true;
+                }
+            }
+            
+            return false;
+        } catch (PDOException $e) {
+            error_log("Error logging in: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function updateLastOnline($userId) {
+        try {
+            $currentDateTime = date('Y-m-d H:i:s');
+            $query = "UPDATE account SET datetime_last_online = :datetime_last_online WHERE user_id = :user_id";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':user_id', $userId);
+            $stmt->bindParam(':datetime_last_online', $currentDateTime);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Error updating last online: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function fetch($username) {
+        try {
+            $query = "SELECT * FROM account WHERE username = :username";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':username', $username);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching user data: " . $e->getMessage());
             return false;
         }
     }

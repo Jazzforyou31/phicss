@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['user_id'])) {
     
     try {
         // Create an instance of AccountClass
-        $account = new AccountClass();
+        $account = new Account();
         
         // Delete the user
         $result = $account->deleteUser($userId);

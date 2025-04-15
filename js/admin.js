@@ -1,140 +1,120 @@
-// Immediately run sidebar initialization
-(function() {
-    console.log('Immediate sidebar initialization running');
+// Document ready shorthand
+$(function() {
     initializeSidebar();
-})();
 
-// Initialize sidebar functionality when DOM is ready 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM Content Loaded - initializing sidebar');
-    initializeSidebar();
-});
-
-// Function to initialize sidebar
-function initializeSidebar() {
-    // Get elements
-    const sidebar = document.getElementById('adminSidebar');
-    const mainContent = document.querySelector('.main-content');
-    const toggleButton = document.getElementById('menu-toggle');
-    const toggleIcon = document.getElementById('toggleIcon');
-    const overlay = document.getElementById('sidebarOverlay');
-    
-    console.log('Sidebar initialization - Elements:', {
-        sidebar: sidebar ? true : false,
-        mainContent: mainContent ? true : false,
-        toggleButton: toggleButton ? true : false,
-        toggleIcon: toggleIcon ? true : false,
-        overlay: overlay ? true : false
-    });
-    
-    // If elements don't exist, exit early
-    if (!sidebar || !toggleButton || !toggleIcon) {
-        console.error('Required sidebar elements not found');
-        return;
-    }
-    
-    // Function to toggle sidebar
-    function toggleSidebar(e) {
-        console.log('Toggle sidebar button clicked');
-        
-        // Prevent default behavior
-        if (e) e.preventDefault();
-        e.stopPropagation();
-        
-        if (window.innerWidth < 768) {
-            console.log('Mobile view: toggling active class');
-            
-            // Toggle active classes
-            sidebar.classList.toggle('active');
-            if (overlay) overlay.classList.toggle('active');
-            document.body.classList.toggle('sidebar-open');
-            
-            // Update icon
-            if (sidebar.classList.contains('active')) {
-                toggleIcon.classList.remove('fa-bars');
-                toggleIcon.classList.add('fa-times');
-            } else {
-                toggleIcon.classList.remove('fa-times');
-                toggleIcon.classList.add('fa-bars');
-            }
-        } else {
-            console.log('Desktop view: toggling collapsed class');
-            
-            // Toggle collapsed classes
-            sidebar.classList.toggle('collapsed');
-            if (mainContent) mainContent.classList.toggle('expanded');
-        }
-    }
-    
-    // Add click event listener to toggle button
-    console.log('Adding click event to toggle button');
-    toggleButton.onclick = toggleSidebar;
-    
-    // Backup method - add event listener normally as well
-    toggleButton.addEventListener('click', toggleSidebar);
-    
-    // Adjust for screen size
-    function adjustForScreenSize() {
-        console.log('Adjusting for screen size:', window.innerWidth);
-        
-        if (window.innerWidth < 768) {
-            // Mobile view setup
-            sidebar.classList.remove('collapsed');
-            
-            if (mainContent) {
-                mainContent.classList.add('expanded');
-            }
-        } else {
-            // Desktop view setup
-            sidebar.classList.remove('active');
-            if (overlay) overlay.classList.remove('active');
-            
-            if (mainContent) {
-                mainContent.classList.remove('expanded');
-            }
-        }
-        
-        // Reset icon regardless
-        toggleIcon.classList.remove('fa-times');
-        toggleIcon.classList.add('fa-bars');
-    }
-    
-    // Add resize event listener
-    window.addEventListener('resize', adjustForScreenSize);
-    
-    // Initial setup
-    adjustForScreenSize();
-    
-    // Close sidebar when clicking outside
-    document.addEventListener('click', function(event) {
-        if (window.innerWidth < 768 && 
-            sidebar.classList.contains('active') && 
-            !sidebar.contains(event.target) && 
-            !toggleButton.contains(event.target)) {
-            
-            console.log('Closing sidebar - clicked outside');
-            sidebar.classList.remove('active');
-            if (overlay) overlay.classList.remove('active');
-            document.body.classList.remove('sidebar-open');
-            toggleIcon.classList.remove('fa-times');
-            toggleIcon.classList.add('fa-bars');
-        }
+    // Also initialize on DOM content loaded (for robustness)
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeSidebar();
     });
 
-    // Close sidebar when clicking overlay
-    if (overlay) {
-        overlay.addEventListener('click', function() {
-            if (sidebar.classList.contains('active')) {
-                console.log('Closing sidebar - clicked overlay');
+    function initializeSidebar() {
+        // Get sidebar elements
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarToggle = document.querySelector('.sidebar-toggle');
+        const sidebarOverlay = document.querySelector('.sidebar-overlay');
+        const content = document.querySelector('.content');
+        
+        // Skip if elements don't exist
+        if (!sidebar || !sidebarToggle || !content) {
+            return;
+        }
+        
+        // Function to toggle sidebar
+        function toggleSidebar() {
+            const viewportWidth = window.innerWidth;
+            
+            // Different behavior based on screen size
+            if (viewportWidth < 992) { // Mobile view
+                sidebar.classList.toggle('active');
+                if (sidebarOverlay) {
+                    sidebarOverlay.classList.toggle('active');
+                }
+                
+                // Prevent scroll on body when sidebar is open on mobile
+                document.body.classList.toggle('sidebar-open');
+            } else { // Desktop view
+                sidebar.classList.toggle('collapsed');
+                content.classList.toggle('expanded');
+                
+                // Store preference in localStorage
+                const isCollapsed = sidebar.classList.contains('collapsed');
+                localStorage.setItem('sidebar_collapsed', isCollapsed ? 'true' : 'false');
+            }
+        }
+        
+        // Add click event to toggle button
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', toggleSidebar);
+        }
+        
+        // Adjust layout based on screen size
+        function adjustLayout() {
+            const viewportWidth = window.innerWidth;
+            
+            // Get saved preference from localStorage
+            const savedCollapsed = localStorage.getItem('sidebar_collapsed');
+            
+            if (viewportWidth < 992) {
+                // Mobile view - always close sidebar
+                sidebar.classList.remove('collapsed');
                 sidebar.classList.remove('active');
-                this.classList.remove('active');
+                content.classList.remove('expanded');
+                
+                if (sidebarOverlay) {
+                    sidebarOverlay.classList.remove('active');
+                }
+                
                 document.body.classList.remove('sidebar-open');
-                toggleIcon.classList.remove('fa-times');
-                toggleIcon.classList.add('fa-bars');
+            } else {
+                // Desktop view - respect saved preferences
+                if (savedCollapsed === 'true') {
+                    sidebar.classList.add('collapsed');
+                    content.classList.add('expanded');
+                } else {
+                    sidebar.classList.remove('collapsed');
+                    content.classList.remove('expanded');
+                }
+                
+                // Always remove mobile classes
+                sidebar.classList.remove('active');
+                if (sidebarOverlay) {
+                    sidebarOverlay.classList.remove('active');
+                }
+                document.body.classList.remove('sidebar-open');
+            }
+        }
+        
+        // Close sidebar when clicking outside (mobile only)
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth < 992 && 
+                !sidebar.contains(event.target) && 
+                !sidebarToggle.contains(event.target) && 
+                sidebar.classList.contains('active')) {
+                
+                sidebar.classList.remove('active');
+                if (sidebarOverlay) {
+                    sidebarOverlay.classList.remove('active');
+                }
+                document.body.classList.remove('sidebar-open');
             }
         });
+        
+        // Close sidebar when clicking overlay
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+                document.body.classList.remove('sidebar-open');
+            });
+        }
+        
+        // Initial layout adjustment
+        adjustLayout();
+        
+        // Adjust layout on window resize
+        window.addEventListener('resize', adjustLayout);
     }
-}
+});
 
 function loadNewsSection() {
     // Show loading indicator

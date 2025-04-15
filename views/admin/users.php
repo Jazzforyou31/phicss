@@ -1,9 +1,10 @@
 <?php
 session_start();
+include_once '../../includes/auth_check.php';
 require '../../classes/accountClass.php';
 
-$accountClass = new AccountClass();
-$userList = $accountClass->getAllUsers();
+$accountObj = new Account();
+$userList = $accountObj->getAllUsers();
 ?>
 
 <!DOCTYPE html>

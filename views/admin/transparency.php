@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once '../../includes/auth_check.php';
 
 // Include TransparencyClass for data fetching
 require_once '../../classes/transparencyClass.php';

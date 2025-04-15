@@ -2,7 +2,7 @@
 session_start();
 require '../../classes/accountClass.php';
 
-$accountClass = new AccountClass();
+$accountClass = new Account();
 $userList = $accountClass->getAllUsers();
 ?>
 

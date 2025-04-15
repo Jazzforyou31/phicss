@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
     <title>Admin Dashboard</title>    
-    <?php include '../../includes/head.php'; ?> 
+    <?php 
+    // Include authentication check
+    include_once '../../includes/auth_check.php';
+    include '../../includes/head.php'; 
+    ?> 
 </head>
 <body>
 <div class="admin-container">

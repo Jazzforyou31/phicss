@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['user_id'])) {
     $userId = intval($_GET['user_id']);
     
     // Create an instance of AccountClass
-    $account = new AccountClass();
+    $account = new Account();
     
     // Get user data
     $userData = $account->getUserById($userId);

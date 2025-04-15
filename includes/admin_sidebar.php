@@ -120,7 +120,7 @@ if (!isset($base_url)) {
     </div>
     
     <div class="sidebar-footer">
-        <a href="<?php echo $base_url; ?>logout.php" class="logout-btn">
+        <a href="<?php echo $base_url; ?>accounts/logout.php" class="logout-btn">
             <i class="fas fa-sign-out-alt"></i>
             <span>Logout</span>
         </a>

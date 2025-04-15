@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once '../../includes/auth_check.php';
 require '../../classes/announcementClass.php';
 
 $announcementClass = new AnnouncementClass();

@@ -4,6 +4,17 @@ require_once '../classes/accountClass.php';
 
 session_start();
 
+// Redirect if already logged in
+if (isset($_SESSION['user_id'])) {
+    if ($_SESSION['role'] == 'admin' || $_SESSION['role'] == 'moderator') {
+        header('location: ../views/admin/admin_dashboard');
+        exit();
+    } else {
+        header('location: ../views/user/landing_page.php');
+        exit();
+    }
+}
+
 $username = $password = '';
 $accountObj = new Account();
 $loginErr = '';
@@ -22,11 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($data['role'] == 'admin' || $data['role'] == 'moderator') {
             header('location: ../views/admin/admin_dashboard');
             exit();
-        } elseif ($data['role'] != 'moderator' && $data['role'] != 'admin') {
-            header('location: ../views/user/landing_page');
-            exit();
         } else {
-            $loginErr = 'Invalid username or password';
+            header('location: ../views/user/landing_page.php');
+            exit();
         }
     } else {
         $loginErr = 'Invalid username or password';
@@ -66,8 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <p>Philippine Computing Students Society</p>
                 </div>
                 <div class="login-body">
-                    <?php if (!empty($error)): ?>
-                        <div class="alert"><?= htmlspecialchars($error) ?></div>
+                    <?php if (!empty($loginErr)): ?>
+                        <div class="alert alert-danger"><?= htmlspecialchars($loginErr) ?></div>
                     <?php endif; ?>
                     
                     <form method="post" action="">
@@ -90,6 +99,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <button type="submit" class="btn-login">
                                 <i class="fas fa-sign-in-alt me-2"></i>Log in
                             </button>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <p>Don't have an account? <a href="signup.php">Sign up here</a></p>
                         </div>
                     </form>
                 </div>
