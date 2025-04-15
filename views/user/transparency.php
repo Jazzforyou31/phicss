@@ -9,12 +9,12 @@ $sections = $transparency->fetchSections();
 <link rel="stylesheet" href="<?php echo $base_url; ?>css/transparency.css">
 
 <body>
-    <h1>Transparency Page <span class="fy-year"><a href="#">| FY 2025</a></span></h1>
+    <h1>Transparency Page <span class="fy-year"><a href="#">| S.Y 2025-2026</a></span></h1>
 
     <div class="sidebar">
         <p><a href="#">See also:</a></p>
         <p>Transparency Page <br>
-        <a href="#">2023, </a><a href="#">2024, </a><a href="#">2025</a></p>
+        <a href="#">2023-2024</a><br><a href="#">2024-2025</a><br><a href="#">2025-2026</a></p>
     </div>
 
     <div class="logo">
