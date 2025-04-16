@@ -143,3 +143,70 @@ a {
         margin-left: 15px;
     }
 }
+
+
+
+.collection-summary {
+    background: #f5f7fb;
+    padding: 60px 20px;
+    text-align: center;
+  }
+  
+  .collection-summary h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 40px;
+  }
+  
+  .collection-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+  }
+  
+  .chart-box {
+    background: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    max-width: 400px;
+    width: 100%;
+  }
+  
+  .total-summary {
+    background: #0d6efd;
+    color: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    width: 320px;
+    text-align: left;
+  }
+  
+  .total-summary h3 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+  }
+  
+  .total-summary .grand-amount {
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .total-summary .fee-breakdown {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .total-summary .fee-breakdown li {
+    font-size: 1rem;
+    padding: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
