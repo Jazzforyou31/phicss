@@ -1,5 +1,30 @@
 <?php
-session_start();
+// Start the session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// We won't use include for auth check here as it causes redirection
+// Instead, check session directly
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
+    // Return a JSON response instead of redirecting
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Authentication required'
+    ]);
+    exit;
+}
+
+// Check if user has admin/moderator role
+if ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'moderator') {
+    // Return a JSON response instead of redirecting
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Insufficient permissions'
+    ]);
+    exit;
+}
+
 require '../../classes/newsClass.php';
 
 // Debugging

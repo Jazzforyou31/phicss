@@ -40,18 +40,40 @@ $(document).ready(function() {
         });
     });
 
-    // Edit Event - Load Data
-    // Add to events.js (in the edit event load section)
-$('#edit_event_image').on('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            $('#current_image_preview').attr('src', e.target.result);
+    // Handle keep current image checkbox
+    $(document).on('change', '#keep_current_image', function() {
+        const isChecked = $(this).is(':checked');
+        $('#edit_event_image').prop('disabled', isChecked);
+        
+        if (isChecked) {
+            // Restore original image preview if checkbox is checked
+            const originalImage = $('#current_image').val();
+            if (originalImage) {
+                if (originalImage.match(/^https?:\/\//)) {
+                    $('#current_image_preview').attr('src', originalImage);
+                } else {
+                    $('#current_image_preview').attr('src', '../../assets/images/' + originalImage);
+                }
+            } else {
+                $('#current_image_preview').attr('src', '../../assets/images/default.png');
+            }
         }
-        reader.readAsDataURL(file);
-    }
-});
+    });
+
+    // Edit Event - Load Data
+    $('#edit_event_image').on('change', function(e) {
+        if (!$('#keep_current_image').is(':checked')) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#current_image_preview').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    });
+    
     $(document).on('click', '.edit-btn', function() {
         const eventId = $(this).data('id');
         
@@ -76,9 +98,21 @@ $('#edit_event_image').on('change', function(e) {
                     $('#edit_assigned_officers').val(event.assigned_officers);
                     $('#current_image').val(event.image);
                     
+                    // Reset the keep current image checkbox and file input
+                    $('#keep_current_image').prop('checked', true);
+                    $('#edit_event_image').prop('disabled', true).val('');
+                    
                     // Show current image
                     if (event.image) {
-                        $('#current_image_preview').attr('src', '../../assets/images/' + event.image);
+                        // Check if it's a URL or a local path
+                        if (event.image.match(/^https?:\/\//)) {
+                            $('#current_image_preview').attr('src', event.image);
+                        } else {
+                            $('#current_image_preview').attr('src', '../../assets/images/' + event.image);
+                        }
+                        $('#current_image_preview').show();
+                    } else {
+                        $('#current_image_preview').attr('src', '../../assets/images/default.png');
                     }
                     
                     $('#editEventModal').modal('show');
@@ -100,6 +134,11 @@ $('#edit_event_image').on('change', function(e) {
         e.preventDefault();
         const formData = new FormData(this);
         
+        // Show loading indicator
+        const submitBtn = $(this).find('button[type="submit"]');
+        const originalBtnText = submitBtn.text();
+        submitBtn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...').prop('disabled', true);
+        
         $.ajax({
             url: '../adminModals/editEvent.php',
             type: 'POST',
@@ -114,7 +153,12 @@ $('#edit_event_image').on('change', function(e) {
                     setTimeout(() => location.reload(), 1000);
                 } else {
                     showAlert(response.message, 'danger');
+                    submitBtn.html(originalBtnText).prop('disabled', false);
                 }
+            },
+            error: function(xhr, status, error) {
+                showAlert('Error: ' + error, 'danger');
+                submitBtn.html(originalBtnText).prop('disabled', false);
             }
         });
     });

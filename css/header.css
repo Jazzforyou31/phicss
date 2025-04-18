@@ -36,7 +36,7 @@ header.sticky {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 50px;
+    padding: 15px 50px;
     background-color: white;
 }
 
@@ -46,7 +46,7 @@ header.sticky {
 }
 
 .logo-container img {
-    width: 80px;
+    width: 65px;
     height: auto;
     margin-right: 15px;
 }
@@ -68,6 +68,13 @@ header.sticky {
     color: #333;
     font-size: 14px;
     margin: 0;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-direction: row;
 }
 
 .login-btn {
@@ -96,13 +103,15 @@ header.sticky {
     color: #333;
     border: 1px solid #ccc;
     border-radius: 5px;
-    padding: 10px 20px;
+    padding: 8px 15px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     text-decoration: none;
     display: inline-block;
     transition: all 0.3s ease;
+    white-space: nowrap;
+    order: 2;
 }
 
 .contact-btn:hover {
@@ -113,9 +122,12 @@ header.sticky {
 
 .main-nav {
     background-color: #0B2603;
-    padding: 0 50px;
+    padding: 0;
     position: relative;
     transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .nav-links {
@@ -178,19 +190,40 @@ header.sticky {
     height: 0; 
 }
 
+.announcement-section {
+    display: flex;
+    height: 38px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    order: 1;
+}
+
+.announcement-label {
+    background-color: black;
+    color: white;
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.part-time-offer {
+    background-color: white;
+    padding: 8px 15px;
+    font-size: 14px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
 .announcement-banner {
     display: flex;
     border: 1px solid #ccc;
     margin: 20px 50px;
-}
-
-.announcement-label {
-    background-color: #ff4444;
-    color: white;
-    padding: 10px 15px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
 }
 
 .announcement-content {
@@ -324,198 +357,79 @@ header.sticky {
         padding-left: 45px;
         border-left: 4px solid #4CAF50;
     }
-}
-
-.mobile-toggle {
-    display: none; 
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: 1.5rem;
-    color: white;
-    z-index: 1002;
-    padding: 8px;
-    transition: all 0.3s ease;
-}
-
-.mobile-toggle i {
-    transition: transform 0.3s ease;
-    pointer-events: none;
-}
-
-.mobile-toggle:hover {
-    color: #4CAF50;
-}
-
-.nav-spacer {
-    width: 150px; 
-}
-
-@media screen and (max-width: 768px) {
+    
     .top-header {
         flex-direction: column;
         padding: 15px;
+        text-align: center;
     }
     
     .logo-container {
         margin-bottom: 15px;
+        justify-content: center;
     }
     
+    .header-right {
+        flex-direction: row;
+        width: 100%;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .announcement-section {
+        width: 100%;
+    }
     
     .main-nav {
-        padding: 15px;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 50px;
-    }
-    
-    .announcement-banner {
-        margin: 15px;
         flex-direction: column;
-    }
-    
-    .announcement-content {
         padding: 10px;
     }
     
+    .search-container {
+        width: 100%;
+        max-width: 100%;
+        margin: 10px 0;
+        order: -1;
+    }
+    
+    .search-box {
+        width: 100%;
+    }
+    
     .nav-links {
-        display: none;
-        width: 100%;
         flex-direction: column;
-        margin-top: 0;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
         background-color: #0B2603;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        z-index: 1001;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        max-height: 80vh; 
-        overflow-y: auto; 
-        -webkit-overflow-scrolling: touch;
-    }
-    
-   
-    header.sticky .nav-links {
-        position: absolute;
-        top: 100%;
-        left: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
         width: 100%;
-        max-height: calc(100vh - 60px); 
+        z-index: 1001;
     }
     
- 
     .nav-links.active {
-        display: flex;
+        max-height: 500px;
     }
     
     .nav-links li {
-        margin: 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         width: 100%;
-    }
-    
-    .nav-links li:last-child {
-        border-bottom: none;
+        text-align: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .nav-links a {
-        padding: 15px;
-        width: 100%;
-        display: block;
-    }
-    
-    
-    .dropdown > a:after {
-        display: none;
-    }
-    
-    .dropdown-toggle .mobile-arrow {
-        display: inline-block;
-        position: absolute;
-        right: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-    
-    .dropdown-content {
-        position: static;
-        box-shadow: none;
-        background-color: #0a1e03;
-        width: 100%;
-        padding: 0;
-        margin: 0;
-        border-radius: 0;
-        max-height: 0;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        opacity: 0;
-        visibility: hidden;
-        display: none; 
-    }
-    
-   
-    .dropdown.active .dropdown-content {
-        max-height: none;
-        opacity: 1;
-        visibility: visible;
-        display: block; 
-        position: relative; 
-        z-index: 1000;
-        overflow-y: auto; 
-        max-height: 50vh; 
-    }
-    
-   
-    .dropdown-content a {
-        color: white;
-        padding: 12px 40px; 
-        display: block;
-        width: 100%;
-        white-space: normal; 
-        font-size: 0.95rem; 
-    }
-    
-   
-    .dropdown-content li {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        display: block;
-        width: 100%;
-    }
-    
-   
-    .dropdown-content li:last-child {
-        border-bottom: none;
-    }
-    
-    
-    .dropdown-content a:hover {
-        background-color: #143b06;
-        padding-left: 45px; 
+        padding: 12px 15px;
     }
     
     .mobile-toggle {
-        display: block !important;
+        display: flex;
         position: absolute;
+        top: 10px;
         right: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 9999;
-        color: white;
-        font-size: 24px;
-        cursor: pointer;
-    }
-    
-    .mobile-toggle.active i {
-        transform: rotate(90deg);
-    }
-    
-    .nav-spacer {
-        display: none;
     }
 }
 
@@ -578,5 +492,91 @@ header.sticky {
     .dropdown.active .mobile-arrow {
         transform: translateY(-50%) rotate(180deg);
         color: #4CAF50;
+    }
+}
+
+.mobile-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    cursor: pointer;
+    margin-left: auto;
+    z-index: 1002;
+}
+
+.mobile-toggle i {
+    color: white;
+    font-size: 24px;
+}
+
+.mobile-toggle:hover {
+    opacity: 0.8;
+}
+
+.nav-spacer {
+    width: 150px;
+}
+
+/* Search Box */
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: #1b3600;
+    border-radius: 0;
+    margin: 5px 0;
+    margin-left: 20px;
+    padding: 0;
+    max-width: 250px;
+}
+
+.search-box {
+    border: none;
+    background: #1b3600;
+    padding: 8px 10px;
+    font-size: 14px;
+    width: 200px;
+    outline: none;
+    color: white;
+}
+
+.search-box::placeholder {
+    color: #aaa;
+    opacity: 0.8;
+}
+
+.search-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px 10px;
+    color: white;
+}
+
+.search-button:hover {
+    color: #4CAF50;
+}
+
+@media screen and (max-width: 1100px) {
+    .header-right {
+        flex-direction: row;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .announcement-section {
+        width: 350px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .header-right {
+        flex-direction: column;
+    }
+    
+    .announcement-section {
+        width: 100%;
+        margin-bottom: 10px;
     }
 }

@@ -1,71 +1,99 @@
 <?php
-require_once '../../classes/eventClass.php';
-header('Content-Type: application/json');
-
-// Start session to access user_id
 session_start();
+require_once '../../classes/eventClass.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $event = new EventClass();
+// Check if user is logged in and has admin privileges
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    echo json_encode(['status' => 'error', 'message' => 'Unauthorized access']);
+    exit;
+}
+
+// Check if it's a POST request
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+    exit;
+}
+
+// Initialize response array
+$response = ['status' => 'error', 'message' => ''];
+
+try {
+    // Validate required fields
+    $required_fields = ['event_name', 'event_category', 'event_audience', 'event_venue', 
+                       'event_start_date', 'event_end_date', 'event_description'];
     
-    // Required fields
-    $required = ['event_name', 'event_category', 'event_audience', 'event_venue', 
-                'event_start_date', 'event_end_date', 'event_description'];
-    
-    foreach ($required as $field) {
+    foreach ($required_fields as $field) {
         if (empty($_POST[$field])) {
-            echo json_encode(['status' => 'error', 'message' => "$field is required"]);
-            exit;
+            throw new Exception("$field is required");
         }
     }
-    
-    // Process file upload
+
+    // Handle image upload
     $image = null;
-    if (!empty($_FILES['image']['name'])) {
-        $targetDir = "../../../assets/images/";  // Adjusted path (3 levels up)
-        if (!file_exists($targetDir)) {
-            mkdir($targetDir, 0777, true);  // Create directory if it doesn't exist
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+        $max_size = 5 * 1024 * 1024; // 5MB
+
+        if (!in_array($_FILES['image']['type'], $allowed_types)) {
+            throw new Exception('Invalid image type. Only JPG, PNG, and GIF are allowed.');
+        }
+
+        if ($_FILES['image']['size'] > $max_size) {
+            throw new Exception('Image size too large. Maximum size is 5MB.');
+        }
+
+        // Generate unique filename
+        $extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        $filename = uniqid() . '.' . $extension;
+        
+        // Make sure the upload directory exists
+        $upload_dir = realpath(dirname(__FILE__) . '/../../assets/images');
+        if (!$upload_dir) {
+            $upload_dir = dirname(__FILE__) . '/../../assets/images';
+            if (!file_exists($upload_dir)) {
+                mkdir($upload_dir, 0777, true);
+            }
         }
         
-        $fileName = 'event_' . time() . '_' . basename($_FILES['image']['name']);
-        $targetFile = $targetDir . $fileName;
+        $upload_path = $upload_dir . '/' . $filename;
         
-        // Validate image file
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        $fileType = mime_content_type($_FILES['image']['tmp_name']);
-        
-        if (in_array($fileType, $allowedTypes)) {
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                $image = $fileName;
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to upload image']);
-                exit;
-            }
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)) {
+            $image = $filename;
+            $response['debug'] = 'Image saved to: ' . $upload_path;
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Invalid image type']);
-            exit;
+            $error = error_get_last();
+            throw new Exception('Failed to upload image. Error: ' . ($error ? $error['message'] : 'Unknown error'));
         }
     }
-    
-    // Add event
-    $result = $event->addEvent(
+
+    // Create event instance
+    $eventClass = new EventClass();
+
+    // Add event to database
+    $result = $eventClass->addEvent(
         $_POST['event_name'],
         $_POST['event_category'],
         $_POST['event_audience'],
         $image,
         $_POST['event_description'],
-        $_SESSION['user_id'] ?? 1, // created_by
-        $_POST['assigned_officers'] ?? null,
+        $_SESSION['user_id'],
+        $_POST['assigned_officers'] ?? '',
         $_POST['event_venue'],
         $_POST['event_start_date'],
         $_POST['event_end_date']
     );
-    
+
     if ($result) {
-        echo json_encode(['status' => 'success', 'message' => 'Event added successfully']);
+        $response['status'] = 'success';
+        $response['message'] = 'Event added successfully';
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to add event']);
+        throw new Exception('Failed to add event');
     }
-} else {
-    echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+
+} catch (Exception $e) {
+    $response['message'] = $e->getMessage();
 }
+
+// Send JSON response
+header('Content-Type: application/json');
+echo json_encode($response);

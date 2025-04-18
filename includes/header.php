@@ -41,11 +41,25 @@
                     <p>Western Mindanao State University | College of Computing Studies</p>
                 </div>
             </div>
-            <a href="<?php echo $base_url; ?>views/user/contact" class="contact-btn">Contact Us</a>
+            <div class="header-right">
+                <div class="announcement-section">
+                    <div class="announcement-label">Announcement</div>
+                    <div class="part-time-offer">Part Time Offer for Computing Studies Students</div>
+                </div>
+                <a href="<?php echo $base_url; ?>views/user/contact" class="contact-btn">Contact Us</a>
+            </div>
         </div>
         
         <!-- Main navigation -->
         <nav class="main-nav">
+            <!-- Search box -->
+            <div class="search-container">
+                <input type="text" placeholder="Search" class="search-box">
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
             <!-- Hamburger menu for mobile -->
             <div class="mobile-toggle" id="mobile-menu-toggle">
                 <i class="fas fa-bars"></i>
@@ -68,7 +82,7 @@
                 </li>
                 <li><a href="<?php echo $base_url; ?>views/user/news" class="<?php echo (strpos($_SERVER['REQUEST_URI'], '/news') !== false) ? 'active' : ''; ?>">News</a></li>
                 <li><a href="<?php echo $base_url; ?>views/user/events" class="<?php echo (strpos($_SERVER['REQUEST_URI'], '/events') !== false) ? 'active' : ''; ?>">Events</a></li>
-                <li><a href="<?php echo $base_url; ?>views/user/transparency" class="<?php echo (strpos($_SERVER['REQUEST_URI'], '/transparency') !== false) ? 'active' : ''; ?>">Transparency Report</a></li>
+                <li><a href="<?php echo $base_url; ?>views/user/transparency" class="<?php echo (strpos($_SERVER['REQUEST_URI'], '/transparency') !== false) ? 'active' : ''; ?>">Transparency Page</a></li>
             </ul>
         </nav>
     </header>

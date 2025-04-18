@@ -21,6 +21,33 @@ class EventClass {
         }
     }
 
+    public function fetchEventDates() {
+        try {
+            $query = "SELECT event_id, event_name, event_venue, event_description, event_start_date, event_end_date FROM events";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Format events for calendar display
+            $calendarEvents = [];
+            foreach ($events as $event) {
+                $calendarEvents[] = [
+                    'id' => $event['event_id'],
+                    'title' => $event['event_name'],
+                    'start' => $event['event_start_date'],
+                    'end' => $event['event_end_date'],
+                    'description' => $event['event_description'],
+                    'location' => $event['event_venue']
+                ];
+            }
+            
+            return $calendarEvents;
+        } catch (PDOException $e) {
+            error_log("Error fetching event dates: " . $e->getMessage());
+            return [];
+        }
+    }
+
     public function getEventById($eventId) {
         try {
             $query = "SELECT * FROM events WHERE event_id = :event_id LIMIT 1";
@@ -71,23 +98,20 @@ class EventClass {
                 event_name = :name,
                 event_category = :category,
                 event_audience = :audience,
+                image = :image,
                 event_description = :description,
                 assigned_officers = :officers,
                 event_venue = :venue,
                 event_start_date = :start_date,
-                event_end_date = :end_date";
-            
-            if ($image !== null) {
-                $query .= ", image = :image";
-            }
-            
-            $query .= " WHERE event_id = :event_id";
+                event_end_date = :end_date
+                WHERE event_id = :event_id";
             
             $stmt = $this->db->prepare($query);
             $params = [
                 ':name' => $name,
                 ':category' => $category,
                 ':audience' => $audience,
+                ':image' => $image ?: 'default.png',
                 ':description' => $description,
                 ':officers' => $officers,
                 ':venue' => $venue,
@@ -95,10 +119,6 @@ class EventClass {
                 ':end_date' => $endDate,
                 ':event_id' => $eventId
             ];
-            
-            if ($image !== null) {
-                $params[':image'] = $image;
-            }
             
             $success = $stmt->execute($params);
             $this->db->commit();

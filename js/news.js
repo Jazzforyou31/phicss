@@ -162,27 +162,31 @@ $(document).ready(function () {
             .html('<i class="fas fa-' + (type === 'success' ? 'check-circle' : 'exclamation-circle') + '"></i> ' + message);
     }
 
-    // Show alert - globally accessible
-    window.showAlert = function(type, message) {
+    // Function to show alert messages
+    function showAlert(type, message) {
         // Remove any existing alerts
-        $(".alert-floating").remove();
+        $('.alert-container').remove();
         
-        // Create a new alert
-        const alertHtml = `
-            <div class="alert alert-${type} alert-dismissible fade show alert-floating" role="alert">
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}
+        // Create alert container
+        const alertContainer = $('<div class="alert-container" style="position: fixed; top: 20px; right: 20px; max-width: 350px; z-index: 10000;"></div>');
+        
+        // Create alert element
+        const alert = $(`
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                ${message}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-        `;
+        `);
         
-        // Append the alert to the body
-        $("body").append(alertHtml);
+        // Add to container and append to body
+        alertContainer.append(alert);
+        $('body').append(alertContainer);
         
         // Auto dismiss after 5 seconds
-        setTimeout(function() {
-            $(".alert-floating").alert('close');
+        setTimeout(() => {
+            alert.alert('close');
         }, 5000);
-    };
+    }
 
     // Handle form submission
     $("body").on("submit", "#addNewsForm", function (e) {
@@ -317,6 +321,19 @@ function editNews(id) {
                 if (detailsXhr.status === 200) {
                     try {
                         var result = JSON.parse(detailsXhr.responseText);
+                        
+                        if (result.status === 'error') {
+                            // Check for authentication errors
+                            if (result.message === 'Authentication required') {
+                                alert("Your session has expired. Please log in again.");
+                                window.location.href = "../../accounts/login.php";
+                                return;
+                            } else if (result.message === 'Insufficient permissions') {
+                                alert("You don't have permission to edit news articles.");
+                                return;
+                            }
+                        }
+                        
                         if (result.status === 'success') {
                             var news = result.data;
                             
@@ -448,6 +465,23 @@ function submitEditForm(form) {
     })
     .then(data => {
         console.log("Response data:", data);
+        
+        if (data.status === 'error') {
+            // Check for authentication errors
+            if (data.message === 'Authentication required') {
+                alert("Your session has expired. Please log in again.");
+                window.location.href = "../../accounts/login.php";
+                return;
+            } else if (data.message === 'Insufficient permissions') {
+                alert("You don't have permission to update news articles.");
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Save Changes';
+                }
+                return;
+            }
+        }
+        
         if (data.status === 'success') {
             alert("News article updated successfully!");
             window.location.reload();
@@ -469,62 +503,79 @@ function submitEditForm(form) {
     });
 }
 
-// Delete news function - globally available
+// Delete news function
 function deleteNews(id) {
-    console.log("Delete function called for ID: " + id);
+    // Show loading on the button
+    const deleteBtn = document.querySelector(`.delete-btn[data-id="${id}"]`);
+    deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    deleteBtn.disabled = true;
     
-    if (confirm("Are you sure you want to delete this news article?")) {
-        // Show loading on the button
-        var deleteBtn = document.querySelector(`.delete-btn[data-id="${id}"]`);
-        deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        deleteBtn.disabled = true;
-        
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '../../views/adminModals/deleteNews.php', true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                try {
-                    var result = JSON.parse(xhr.responseText);
-                    if (result.status === 'success') {
-                        // Remove the news item from DOM
-                        var newsCard = deleteBtn.closest('.news-card');
-                        if (newsCard) {
-                            newsCard.remove();
-                            alert("News article deleted successfully!");
-                        } else {
-                            // If can't find the card, just reload the page
-                            window.location.reload();
-                        }
-                    } else {
-                        alert("Failed to delete news: " + (result.message || "Unknown error"));
-                        // Reset button
-                        deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
-                        deleteBtn.disabled = false;
-                    }
-                } catch (e) {
-                    alert("Invalid server response");
-                    console.error("Error parsing response:", e, xhr.responseText);
-                    // Reset button
-                    deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
-                    deleteBtn.disabled = false;
-                }
-            } else {
-                alert("Server error: " + xhr.status);
-                // Reset button
-                deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
-                deleteBtn.disabled = false;
-            }
-        };
-        
-        xhr.onerror = function() {
-            alert("Network error occurred");
-            // Reset button
+    // Load the delete modal
+    $.ajax({
+        url: "../../views/adminModals/deleteNews.html",
+        type: "GET",
+        success: function(response) {
+            // Remove any existing modal
+            $("#deleteNewsModal").remove();
+            
+            // Add the modal to the page
+            $("body").append(response);
+            
+            // Show the modal
+            const modal = new bootstrap.Modal(document.getElementById('deleteNewsModal'));
+            modal.show();
+            
+            // Reset the delete button
             deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
             deleteBtn.disabled = false;
-        };
-        
-        xhr.send('news_id=' + id);
-    }
+            
+            // Handle confirm delete button click
+            $("#confirmDeleteBtn").off('click').on('click', function() {
+                // Show loading state
+                $(this).html('<i class="fas fa-spinner fa-spin me-2"></i>Deleting...');
+                $(this).prop('disabled', true);
+                
+                // Send delete request
+                $.ajax({
+                    url: "../../views/adminModals/deleteNews.php",
+                    type: "POST",
+                    data: { news_id: id },
+                    success: function(response) {
+                        try {
+                            const result = JSON.parse(response);
+                            if (result.status === 'success') {
+                                // Close the modal
+                                modal.hide();
+                                
+                                // Remove the news item from DOM
+                                const newsCard = deleteBtn.closest('.news-card');
+                                if (newsCard) {
+                                    newsCard.remove();
+                                } else {
+                                    // If can't find the card, reload the page
+                                    window.location.reload();
+                                }
+                                
+                                // Show success message
+                                showAlert('success', 'News article deleted successfully!');
+                            } else {
+                                showAlert('danger', result.message || 'Failed to delete news article');
+                            }
+                        } catch (e) {
+                            showAlert('danger', 'Invalid server response');
+                        }
+                    },
+                    error: function() {
+                        showAlert('danger', 'An error occurred while deleting the news article');
+                    }
+                });
+            });
+        },
+        error: function() {
+            // Reset the delete button
+            deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+            deleteBtn.disabled = false;
+            showAlert('danger', 'Failed to load delete confirmation');
+        }
+    });
 }

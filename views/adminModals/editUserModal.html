@@ -2,46 +2,185 @@
 <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header border-0">
+                <div class="modal-icon">
+                    <i class="fas fa-user-edit"></i>
+                </div>
                 <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="editUserForm">
                     <input type="hidden" id="edit_user_id" name="user_id">
-                    <div class="mb-3">
+                    
+                    <div class="form-group mb-4">
                         <label for="edit_username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="edit_username" name="username" required>
                     </div>
-                    <div class="mb-3">
+                    
+                    <div class="form-group mb-4">
                         <label for="edit_first_name" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="edit_first_name" name="first_name" required>
                     </div>
-                    <div class="mb-3">
+                    
+                    <div class="form-group mb-4">
                         <label for="edit_middle_name" class="form-label">Middle Name</label>
                         <input type="text" class="form-control" id="edit_middle_name" name="middle_name">
                     </div>
-                    <div class="mb-3">
+                    
+                    <div class="form-group mb-4">
                         <label for="edit_last_name" class="form-label">Last Name</label>
                         <input type="text" class="form-control" id="edit_last_name" name="last_name" required>
                     </div>
-                    <div class="mb-3">
+                    
+                    <div class="form-group mb-4">
                         <label for="edit_email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="edit_email" name="email" required>
                     </div>
-                    <div class="mb-3">
+                    
+                    <div class="form-group mb-4">
                         <label for="edit_role" class="form-label">Role</label>
                         <select class="form-select" id="edit_role" name="role" required>
                             <option value="Admin">Admin</option>
                             <option value="Moderator">Moderator</option>
                         </select>
                     </div>
+                    
+                    <div id="editFormMessage" class="alert d-none"></div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="updateUserBtn">Update User</button>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="updateUserBtn">
+                    <i class="fas fa-save me-2"></i>Update User
+                </button>
             </div>
         </div>
     </div>
-</div> 
+</div>
+
+<style>
+#editUserModal .modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+#editUserModal .modal-header {
+    padding: 20px 25px;
+    position: relative;
+}
+
+#editUserModal .modal-icon {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(13, 110, 253, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+#editUserModal .modal-icon i {
+    font-size: 24px;
+    color: #0D6EFD;
+}
+
+#editUserModal .modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2D3748;
+    margin: 0;
+}
+
+#editUserModal .modal-body {
+    padding: 20px 25px;
+}
+
+#editUserModal .form-label {
+    font-weight: 500;
+    color: #4A5568;
+    margin-bottom: 8px;
+}
+
+#editUserModal .form-control,
+#editUserModal .form-select {
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    padding: 10px 15px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+#editUserModal .form-control:focus,
+#editUserModal .form-select:focus {
+    border-color: #0D6EFD;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+#editUserModal .modal-footer {
+    padding: 20px 25px;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+#editUserModal .btn-light {
+    background-color: #F7FAFC;
+    border: 1px solid #E2E8F0;
+    color: #4A5568;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+#editUserModal .btn-light:hover {
+    background-color: #EDF2F7;
+    border-color: #CBD5E0;
+}
+
+#editUserModal .btn-primary {
+    background-color: #0D6EFD;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+#editUserModal .btn-primary:hover {
+    background-color: #0B5ED7;
+    transform: translateY(-1px);
+}
+
+#editUserModal .btn-close {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+}
+
+#editUserModal .btn-close:hover {
+    opacity: 1;
+}
+
+#editUserModal .alert {
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 0;
+}
+
+#editUserModal .alert-success {
+    background-color: #D1FAE5;
+    border-color: #A7F3D0;
+    color: #065F46;
+}
+
+#editUserModal .alert-danger {
+    background-color: #FEE2E2;
+    border-color: #FECACA;
+    color: #991B1B;
+}
+</style> 

@@ -2,36 +2,13 @@
 // events.php
 session_start();
 include_once '../../includes/auth_check.php';
-include '../../includes/admin_topnav.php';
 require_once '../../classes/eventClass.php';
 
 $eventClass = new EventClass();
 $eventList = $eventClass->fetchEventsByAdmin();
 
-// Prepare events for FullCalendar
-$calendarEvents = [];
-foreach ($eventList as $event) {
-    $imagePath = '../../assets/images/default.png';
-    if (!empty($event['image'])) {
-        if (filter_var($event['image'], FILTER_VALIDATE_URL)) {
-            $imagePath = $event['image'];
-        } else {
-            $localPath = '../../assets/images/' . $event['image'];
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . parse_url($localPath, PHP_URL_PATH))) {
-                $imagePath = $localPath;
-            }
-        }
-    }
-
-    $calendarEvents[] = [
-        'id' => $event['event_id'],
-        'title' => $event['event_name'],
-        'start' => $event['event_start_date'],
-        'end' => $event['event_end_date'],
-        'description' => $event['event_description'],
-        'className' => 'fc-event-primary'
-    ];
-}
+// Debug image paths - remove in production
+$debug = false;
 ?>
 
 <!DOCTYPE html>
@@ -43,31 +20,8 @@ foreach ($eventList as $event) {
     <?php include '../../includes/head.php'; ?>
     <link href="../../css/admin_dashboard.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Add FullCalendar CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/admin_sidebar.css">
     <link rel="stylesheet" href="../../css/admin_news.css">
-    <style>
-        /* Calendar-specific styles */
-        #eventsCalendar {
-            min-height: 600px;
-            background: white;
-            margin: 0 auto;
-        }
-        .fc-event {
-            cursor: pointer;
-            padding: 3px;
-            margin-bottom: 2px;
-            border-radius: 3px;
-        }
-        .fc-event-primary {
-            background-color: #4e73df;
-            border-color: #4e73df;
-        }
-        .fc-daygrid-event {
-            white-space: normal !important;
-        }
-    </style>
 </head>
 <body>
 <div class="admin-container">
@@ -95,16 +49,6 @@ foreach ($eventList as $event) {
             </button>
         </div>
 
-        <!-- Calendar Section -->
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0"><i class="far fa-calendar-alt me-2"></i>Events Calendar</h5>
-            </div>
-            <div class="card-body">
-                <div id="eventsCalendar"></div>
-            </div>
-        </div>
-
         <!-- Events Cards -->
         <?php if (!empty($eventList)): ?>
             <div class="news-container">
@@ -117,11 +61,16 @@ foreach ($eventList as $event) {
                             
                             if (!empty($event['image'])) {
                                 if (filter_var($event['image'], FILTER_VALIDATE_URL)) {
+                                    // External URL
                                     $imagePath = $event['image'];
                                 } else {
-                                    $localPath = '../../assets/images/' . $event['image'];
-                                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . parse_url($localPath, PHP_URL_PATH))) {
-                                        $imagePath = $localPath;
+                                    // Local file
+                                    $imagePath = '../../assets/images/' . $event['image'];
+                                    
+                                    // Debug info - remove in production
+                                    if ($debug) {
+                                        echo "<!-- Image debug: " . $imagePath . " -->";
+                                        echo "<!-- File exists: " . (file_exists($_SERVER['DOCUMENT_ROOT'] . str_replace($_SERVER['DOCUMENT_ROOT'], '', realpath(dirname(__FILE__) . '/../../assets/images/') . '/' . $event['image'])) ? 'Yes' : 'No') . " -->";
                                     }
                                 }
                             }
@@ -168,38 +117,6 @@ foreach ($eventList as $event) {
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Add FullCalendar JS -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 <script src="../../js/events.js"></script>
-
-<!-- Initialize FullCalendar -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('eventsCalendar');
-    
-    if (!calendarEl) {
-        console.error('Calendar element not found');
-        return;
-    }
-    
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        events: <?php echo json_encode($calendarEvents); ?>,
-        eventDisplay: 'block',
-        eventDidMount: function(info) {
-            if (info.event.title) {
-                info.el.setAttribute('title', info.event.title);
-            }
-        }
-    });
-    
-    calendar.render();
-});
-</script>
 </body>
 </html>

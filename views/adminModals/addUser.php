@@ -12,11 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
     $role = isset($_POST['role']) ? trim($_POST['role']) : '';
 
-    // Log the processed form data
-    $formData = "Processed form data: username=$username, firstName=$firstName, middleName=$middleName, " .
-                "lastName=$lastName, email=$email, role=$role, password_length=" . strlen($password);
-    file_put_contents(__DIR__ . '/adduser_debug.log', "\n" . $formData, FILE_APPEND);
-
     // Validate required fields
     if (empty($username) || empty($password) || empty($firstName) || 
         empty($lastName) || empty($email) || empty($role)) {
@@ -44,13 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
         // Create an instance of AccountClass
-        $account = new AccountClass();
+        $account = new Account();
 
         // Call the registerAccount method to add the user
         $result = $account->registerAccount($username, $password, $firstName, $middleName, $lastName, $email, $role);
-
-        // Log the result
-        file_put_contents(__DIR__ . '/adduser_debug.log', "\nRegistration result: " . ($result ? "success" : "failure"), FILE_APPEND);
 
         // Return a JSON response based on the result
         if ($result) {
@@ -59,9 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo json_encode(['status' => 'error', 'message' => 'Failed to add user. The username or email may already be in use.']);
         }
     } catch (Exception $e) {
-        // Log the exception
-        file_put_contents(__DIR__ . '/adduser_debug.log', "\nException: " . $e->getMessage(), FILE_APPEND);
-        
         // Return error message
         echo json_encode(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()]);
     }

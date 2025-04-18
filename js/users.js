@@ -1,3 +1,29 @@
+// Function to show alert messages
+function showAlert(type, message) {
+    // Remove any existing alerts
+    $('.alert-container').remove();
+    
+    // Create alert container
+    const alertContainer = $('<div class="alert-container" style="position: fixed; top: 20px; right: 20px; max-width: 350px; z-index: 10000;"></div>');
+    
+    // Create alert element
+    const alert = $(`
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `);
+    
+    // Add to container and append to body
+    alertContainer.append(alert);
+    $('body').append(alertContainer);
+    
+    // Auto dismiss after 5 seconds
+    setTimeout(() => {
+        alert.alert('close');
+    }, 5000);
+}
+
 $(document).ready(function() {
     // Global variables for search and filter
     var currentSearchTerm = '';
@@ -225,30 +251,73 @@ $(document).ready(function() {
     $(document).on('click', '.delete-btn', function() {
         var userId = $(this).data('id');
         
-        // Confirm deletion
-        if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
-            // Make AJAX request to delete user
-            $.ajax({
-                url: '../../views/adminModals/deleteUser.php',
-                type: 'POST',
-                data: { user_id: userId },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status === 'success') {
-                        // Show success message
-                        alert(response.message);
-                        
-                        // Reload users with current filters
-                        loadUsers(currentSearchTerm, currentRole);
-                    } else {
-                        // Show error message
-                        alert(response.message || 'An error occurred while deleting the user.');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert('An error occurred while processing your request.');
-                }
-            });
-        }
+        // Show loading on the button
+        const deleteBtn = $(this);
+        deleteBtn.html('<i class="fas fa-spinner fa-spin"></i>');
+        deleteBtn.prop('disabled', true);
+        
+        // Load the delete modal
+        $.ajax({
+            url: '../../views/adminModals/deleteUserModal.html',
+            type: 'GET',
+            success: function(response) {
+                // Remove any existing modal
+                $("#deleteUserModal").remove();
+                
+                // Add the modal to the page
+                $("body").append(response);
+                
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
+                modal.show();
+                
+                // Reset the delete button
+                deleteBtn.html('<i class="fas fa-trash"></i>');
+                deleteBtn.prop('disabled', false);
+                
+                // Handle confirm delete button click
+                $("#confirmDeleteBtn").off('click').on('click', function() {
+                    // Show loading state
+                    $(this).html('<i class="fas fa-spinner fa-spin me-2"></i>Deleting...');
+                    $(this).prop('disabled', true);
+                    
+                    // Send delete request
+                    $.ajax({
+                        url: '../../views/adminModals/deleteUser.php',
+                        type: 'POST',
+                        data: { user_id: userId },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                // Close the modal
+                                modal.hide();
+                                
+                                // Remove the user row from the table
+                                deleteBtn.closest('tr').fadeOut(300, function() {
+                                    $(this).remove();
+                                });
+                                
+                                // Show success message
+                                showAlert('success', 'User deleted successfully!');
+                                
+                                // Reload users with current filters
+                                loadUsers(currentSearchTerm, currentRole);
+                            } else {
+                                showAlert('danger', response.message || 'Failed to delete user');
+                            }
+                        },
+                        error: function() {
+                            showAlert('danger', 'An error occurred while deleting the user');
+                        }
+                    });
+                });
+            },
+            error: function() {
+                // Reset the delete button
+                deleteBtn.html('<i class="fas fa-trash"></i>');
+                deleteBtn.prop('disabled', false);
+                showAlert('danger', 'Failed to load delete confirmation');
+            }
+        });
     });
 });
