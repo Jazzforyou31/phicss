@@ -1,8 +1,11 @@
 <?php
 include_once '../../includes/header.php';
+require_once '../../classes/AboutClass.php';
+
+$aboutClass = new AboutClass();
+$aboutInfo = $aboutClass->fetchAboutInfo(); // Fetch mission, vision, description, and phicss_image dynamically
 ?>
 <link rel="stylesheet" href="<?php echo $base_url; ?>css/about.css">
-
 
 <section class="hero about-hero">
     <div class="hero-image">
@@ -13,42 +16,39 @@ include_once '../../includes/header.php';
     </div>
 </section>
 
-
 <section class="about-description">
     <div class="container">
         <div class="about-content">
-            <h2>Our Story</h2>
-            <p>Phiccs is a community-driven organization dedicated to providing valuable resources, engaging events, and quality services to our members and the broader community. Founded with the vision of creating a platform where individuals can connect, learn, and grow together, Phiccs has evolved into a vibrant ecosystem of passionate professionals and enthusiasts.</p>
-            
-            <p>Since our establishment, we have been committed to fostering innovation, collaboration, and excellence in all our endeavors. Our community spans across various disciplines, bringing together diverse perspectives and expertise to create meaningful impact.</p>
-            
-            <p>At Phiccs, we believe in the power of community and the importance of continuous learning. Through our various initiatives, programs, and events, we strive to create opportunities for personal and professional development for all our members.</p>
+            <h2>About Us</h2>
+            <p><?php echo htmlspecialchars($aboutInfo['description']); ?></p>
         </div>
     </div>
 </section>
-
 
 <section class="mission-vision-section">
     <div class="container">
         <div class="mv-container">
             <div class="mv-image">
-                <img src="<?php echo $base_url; ?>assets/images/OfficialLogoVer2.png" alt="Phiccs Logo">
+                <?php if (!empty($aboutInfo['phicss_image'])): ?>
+                    <img src="<?php echo $base_url; ?>assets/images/<?php echo htmlspecialchars($aboutInfo['phicss_image']); ?>" alt="Phiccs Logo">
+                <?php else: ?>
+                    <img src="<?php echo $base_url; ?>assets/images/default.png" alt="Default Logo">
+                <?php endif; ?>
             </div>
             <div class="mv-content">
                 <div class="mission">
                     <h2>Our Mission</h2>
-                    <p>To foster a vibrant community through innovative programs, quality services, and dedicated support that enhances the lives of all members. We are committed to creating a space where knowledge is shared, connections are made, and growth is nurtured.</p>
+                    <p><?php echo htmlspecialchars($aboutInfo['mission']); ?></p>
                 </div>
                 
                 <div class="vision">
                     <h2>Our Vision</h2>
-                    <p>To become a leading organization known for excellence in community development, creating sustainable impact and meaningful connections across diverse groups. We envision a future where our community serves as a catalyst for positive change and advancement in society.</p>
+                    <p><?php echo htmlspecialchars($aboutInfo['vision']); ?></p>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
 
 <section class="officers-section">
     <div class="container">
@@ -79,7 +79,7 @@ include_once '../../includes/header.php';
                 </div>
             </div>
             
-           
+            
             <div class="officer-card">
                 <div class="officer-image">
                     <img src="<?php echo $base_url; ?>assets/images/Reymard.jpg" alt="Secretary">
@@ -103,7 +103,7 @@ include_once '../../includes/header.php';
                 </div>
             </div>
             
-           
+            
             <div class="officer-card">
                 <div class="officer-image">
                     <img src="<?php echo $base_url; ?>assets/images/jc.jpg" alt="PR Officer">
@@ -133,4 +133,4 @@ include_once '../../includes/header.php';
 
 <?php
 include_once '../../includes/footer.php';
-?> 
+?>

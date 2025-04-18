@@ -1,5 +1,40 @@
 <?php
 include_once '../../includes/header.php';
+require_once '../../classes/ContactsClass.php';
+require_once '../../classes/MessageClass.php';
+
+// Initialize classes
+$contacts = new ContactClass();
+$contactList = $contacts->fetchAllContacts();
+
+
+$messageObj = new MessageClass();
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = $_POST['name'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $phone = $_POST['phone'] ?? null;
+    $message = $_POST['message'] ?? '';
+
+    // Validate required fields
+    if (!empty($name) && !empty($email) && !empty($message)) {
+        try {
+            $dateSent = date('Y-m-d H:i:s'); // Current timestamp
+            $status = 'Pending'; // Default status for new inquiries
+            $added = $messageObj->addMessage($name, $email, $phone, $message, $dateSent, $status);
+            if ($added) {
+                $successMessage = 'Your inquiry has been sent successfully!';
+            } else {
+                $errorMessage = 'Failed to send your inquiry. Please try again later.';
+            }
+        } catch (Exception $e) {
+            $errorMessage = 'An error occurred: ' . $e->getMessage();
+        }
+    } else {
+        $errorMessage = 'Name, email, and message are required fields.';
+    }
+}
 ?>
 <link rel="stylesheet" href="<?php echo $base_url; ?>css/contact.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,58 +46,82 @@ include_once '../../includes/header.php';
     </div>
 
     <div class="contact-container">
+        <!-- Contact Information Section -->
         <div class="contact-info">
-            <div class="info-card">
-                <div class="info-icon">
-                    <i class="fas fa-map-marker-alt"></i>
-                </div>
-                <h3>Visit Us</h3>
-                <p>123 University Avenue</p>
-                <p>Computing Department</p>
-                <p>Campus Building B, Floor 3</p>
-                <p>Manila, Philippines</p>
-            </div>
-            
-            <div class="info-card">
-                <div class="info-icon">
-                    <i class="fas fa-phone-alt"></i>
-                </div>
-                <h3>Call Us</h3>
-                <p>Main Office: +63 2 8123 4567</p>
-                <p>Student Affairs: +63 2 8123 4568</p>
-                <p>Mon-Fri: 8:00 AM - 5:00 PM</p>
-            </div>
-            
-            <div class="info-card">
-                <div class="info-icon">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <h3>Email Us</h3>
-                <p>General Inquiries:</p>
-                <p><a href="mailto:info@computing.edu.ph">info@computing.edu.ph</a></p>
-                <p>Admissions:</p>
-                <p><a href="mailto:admissions@computing.edu.ph">admissions@computing.edu.ph</a></p>
-            </div>
-            
-            <div class="info-card">
-                <div class="info-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <h3>Office Hours</h3>
-                <p>Monday to Friday:</p>
-                <p>8:00 AM - 5:00 PM</p>
-                <p>Weekends & Holidays:</p>
-                <p>Closed</p>
-            </div>
+            <?php if (!empty($contactList)): ?>
+                <?php foreach ($contactList as $contact): ?>
+                    <!-- Address Section -->
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h3>Visit Us</h3>
+                        <p>
+                            <?php echo htmlspecialchars($contact['street']); ?><br>
+                            <?php echo htmlspecialchars($contact['campus']); ?><br>
+                            <?php echo htmlspecialchars($contact['building']); ?><br>
+                            <?php echo htmlspecialchars($contact['city']); ?>, 
+                            <?php echo htmlspecialchars($contact['province']); ?><br>
+                            <?php echo htmlspecialchars($contact['country']); ?>
+                        </p>
+                    </div>
+
+                    <!-- Contact Numbers Section -->
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <h3>Call Us</h3>
+                            <p>Office Number: <br><?php echo htmlspecialchars($contact['primary_number']); ?></p>
+                            <p>CSC Number: <br><?php echo htmlspecialchars($contact['secondary_number']); ?></p>
+                        </div>
+
+                    <!-- Emails Section -->
+                    <!-- Emails Section -->
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h3>Email Us</h3>
+                            <p>Office Email: <br>
+                                <a href="mailto:<?php echo htmlspecialchars($contact['primary_email']); ?>">
+                                    <?php echo htmlspecialchars($contact['primary_email']); ?>
+                                </a>
+                            </p>
+                            <p>CSC Email: <br>
+                                <a href="mailto:<?php echo htmlspecialchars($contact['alternative_email']); ?>">
+                                    <?php echo htmlspecialchars($contact['alternative_email']); ?>
+                                </a> (Alternative)
+                            </p>
+                        </div>
+
+                    <!-- Office Hours Section -->
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3>Office Hours</h3>
+                        <p><?php echo htmlspecialchars($contact['start_day']); ?> to <?php echo htmlspecialchars($contact['end_day']); ?></p>
+                        <p><?php echo htmlspecialchars($contact['opening_time']); ?> - <?php echo htmlspecialchars($contact['closing_time']); ?></p>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No contact information available at the moment.</p>
+            <?php endif; ?>
         </div>
-        
+
         <div class="contact-form-container">
             <div class="form-header">
                 <h2>Send us a Message</h2>
                 <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+                <?php if (!empty($successMessage)): ?>
+                    <p class="success"><?php echo $successMessage; ?></p>
+                <?php elseif (!empty($errorMessage)): ?>
+                    <p class="error"><?php echo $errorMessage; ?></p>
+                <?php endif; ?>
             </div>
             
-            <form id="contactForm" class="contact-form" action="#" method="post">
+            <form id="contactForm" class="contact-form" action="" method="post">
                 <div class="form-group">
                     <label for="name">Full Name</label>
                     <input type="text" id="name" name="name" placeholder="Enter your full name" required>
@@ -79,19 +138,6 @@ include_once '../../includes/header.php';
                 </div>
                 
                 <div class="form-group">
-                    <label for="subject">Subject</label>
-                    <select id="subject" name="subject" required>
-                        <option value="" disabled selected>Select a subject</option>
-                        <option value="General Inquiry">General Inquiry</option>
-                        <option value="Admissions">Admissions</option>
-                        <option value="Academic Programs">Academic Programs</option>
-                        <option value="Student Services">Student Services</option>
-                        <option value="Technical Support">Technical Support</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
                     <label for="message">Message</label>
                     <textarea id="message" name="message" placeholder="Enter your message" rows="6" required></textarea>
                 </div>
@@ -103,6 +149,7 @@ include_once '../../includes/header.php';
         </div>
     </div>
 
+   
     <div class="map-container">
         <h2>Find Us on Campus</h2>
         <div class="map">
@@ -111,42 +158,61 @@ include_once '../../includes/header.php';
         </div>
     </div>
 
-    <div class="faq-section">
-        <h2>Frequently Asked Questions</h2>
-        <div class="faq-container">
-            <div class="faq-item">
-                <div class="faq-question">How can I apply to the Computing Department?</div>
-                <div class="faq-answer">
-                    <p>To apply to our programs, visit the Admissions section of our website or contact our admissions office directly at admissions@computing.edu.ph. We offer various undergraduate and graduate programs in Computer Science, Information Technology, and related fields.</p>
-                </div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">What are your admission requirements?</div>
-                <div class="faq-answer">
-                    <p>Admission requirements vary by program. Generally, you need to submit academic transcripts, recommendation letters, and complete an entrance examination. For detailed requirements, please visit our Admissions page or contact our admissions office.</p>
-                </div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">Are there scholarships available?</div>
-                <div class="faq-answer">
-                    <p>Yes, we offer various merit-based and need-based scholarships. The Computing Department also has specific scholarships for outstanding students in computer science and related fields. Application deadlines typically fall on March 31 and October 31 each year.</p>
-                </div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">How can I schedule a campus tour?</div>
-                <div class="faq-answer">
-                    <p>Campus tours are available Monday through Friday, 9:00 AM to 3:00 PM. To schedule a tour, please contact our office at least 3 days in advance by email or phone. Virtual tours are also available upon request.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    <?php include_once 'faqs.php'; ?>
 
-<script src="<?php echo $base_url; ?>js/contact.js"></script>
+    <?php include_once 'inputFeedback.php'; ?>
 
-<?php
-include_once '../../includes/footer.php';
-?> 
+    
+     
+
+<script>
+document.querySelector('#contactForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const form = this;
+    const formData = new FormData(form);
+
+    fetch('', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.text())
+    .then(data => {
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(data, "text/html");
+        const successMessage = htmlDoc.querySelector(".success");
+        const errorMessage = htmlDoc.querySelector(".error");
+
+        const formHeader = document.querySelector('.form-header');
+        if (successMessage) {
+            // Hide the form
+            form.style.display = 'none';
+
+            // Display success message only
+            const statusDiv = document.createElement('div');
+            statusDiv.classList.add('form-status-message');
+            statusDiv.innerHTML = `
+                <p class="success">${successMessage.textContent}</p>
+            `;
+            formHeader.appendChild(statusDiv);
+        } else if (errorMessage) {
+            alert(errorMessage.textContent);
+        }
+    })
+    .catch(() => {
+        alert('An error occurred while submitting the form. Please try again.');
+    });
+});
+
+</script>
+
+<!-- Bootstrap JS (required for modal functionality) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<?php include_once '../../includes/footer.php'; ?>
+
+
+
+
+
+

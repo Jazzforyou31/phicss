@@ -9,12 +9,13 @@ $faqsClass = new FaqsClass();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_faq') {
     $question = $_POST['question'] ?? '';
     $answer = $_POST['answer'] ?? '';
+    $category = $_POST['category'] ?? '';
     $created_by = $_SESSION['user_id'] ?? 1; // fallback to 1 if session not available
 
     if (!empty($question) && !empty($answer)) {
         try {
-            $stmt = $faqsClass->connection->prepare("INSERT INTO faqs (question, answer, created_at, created_by) VALUES (?, ?, NOW(), ?)");
-            $stmt->execute([$question, $answer, $created_by]);
+            $stmt = $faqsClass->connection->prepare("INSERT INTO faqs (question, answer, category, created_at, created_by) VALUES (?, ?, ?, NOW(), ?)");
+            $stmt->execute([$question, $answer, $category, $created_by]);
             echo json_encode(['status' => 'success', 'message' => 'FAQ added successfully']);
         } catch (PDOException $e) {
             echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
@@ -30,11 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $faq_id = $_POST['faq_id'] ?? 0;
     $question = $_POST['question'] ?? '';
     $answer = $_POST['answer'] ?? '';
+    $category = $_POST['category'] ?? '';
     $updated_by = $_SESSION['user_id'] ?? 1;
 
-    if ($faq_id && !empty($question) && !empty($answer)) {
+    if ($faq_id && !empty($question) && !empty($answer) && !empty($category)) {
         try {
-            $faqsClass->editFAQ($faq_id, $question, $answer, $updated_by);
+            $faqsClass->editFAQ($faq_id, $question, $answer, $category, $updated_by);
             echo json_encode(['status' => 'success', 'message' => 'FAQ updated successfully']);
         } catch (PDOException $e) {
             echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
@@ -147,6 +149,10 @@ $faqList = $faqsClass->fetchFAQs();
           <label for="answer" class="form-label">Answer</label>
           <textarea class="form-control" name="answer" rows="4" required></textarea>
         </div>
+        <div class="mb-3">
+          <label for="category" class="form-label">Category</label>
+          <textarea class="form-control" name="category" rows="4" required></textarea>
+        </div>
         <input type="hidden" name="action" value="add_faq">
       </div>
       <div class="modal-footer">
@@ -175,6 +181,10 @@ $faqList = $faqsClass->fetchFAQs();
         <div class="mb-3">
           <label for="editAnswer" class="form-label">Answer</label>
           <textarea class="form-control" name="answer" id="editAnswer" rows="4" required></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="editCategory" class="form-label">Category</label>
+          <textarea class="form-control" name="category" id="editCategory" rows="4" required></textarea>
         </div>
         <input type="hidden" name="action" value="edit_faq">
       </div>
@@ -214,6 +224,7 @@ $(document).ready(function () {
         $('#editFaqId').val(faqId);
         $('#editQuestion').val(question);
         $('#editAnswer').val(answer);
+        $('#editCategory').val(category);
         $('#editFaqModal').modal('show');
     });
 

@@ -1,6 +1,11 @@
 <?php
 include_once '../../includes/header.php';
 require_once '../../classes/eventClass.php';
+require_once '../../classes/newsClass.php';
+
+$news = new NewsClass();
+   
+$newsTitles = $news->fetchAllNewsTitles(); // Get only titles for announcement
 
 $eventClass = new EventClass();
 $events = $eventClass->fetchEventsByAdmin(); // Fetch events from the database
@@ -8,18 +13,8 @@ $events = $eventClass->fetchEventsByAdmin(); // Fetch events from the database
 
 <link rel="stylesheet" href="<?php echo $base_url; ?>css/events.css">
 
-<div class="announcement-banner">
-    <div class="announcement-label">Announcement</div>
-    <div class="announcement-content">
-        <div class="announcement-text">
-            <a href="<?php echo $base_url; ?>views/user/announcements.php" class="announcement-link">Part Time Offer for Computing Studies Students</a>
-        </div>
-        <div class="nav-arrows">
-            <div class="nav-arrow">&#10094;</div>
-            <div class="nav-arrow">&#10095;</div>
-        </div>
-    </div>
-</div>
+ <!-- Announcement Banner -->
+ <?php include_once 'announcementBanner.php'; ?>
 
 <section>
     <div class="container">
@@ -73,6 +68,8 @@ $events = $eventClass->fetchEventsByAdmin(); // Fetch events from the database
         </div>
     </div>
 </section>
+
+
 
 <?php
 include_once '../../includes/footer.php';

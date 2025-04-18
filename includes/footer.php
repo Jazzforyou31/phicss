@@ -22,6 +22,7 @@
                         <li><a href="<?php echo $base_url; ?>views/user/news.php"><i class="fas fa-newspaper"></i> News</a></li>
                         <li><a href="<?php echo $base_url; ?>views/user/resources.php"><i class="fas fa-book"></i> Resources</a></li>
                         <li><a href="<?php echo $base_url; ?>views/user/about.php"><i class="fas fa-info-circle"></i> About Us</a></li>
+                        <li><a href="<?php echo $base_url; ?>views/user/accomplishment.php"><i class="fas fa-users"></i> Accomplishments</a></li>
                     </ul>
                 </div>
                 

@@ -32,11 +32,11 @@ class FaqsClass {
     /**
      * Add a new FAQ
      */
-    public function addFAQ($question, $answer, $created_by) {
+    public function addFAQ($question, $answer, $category, $created_by) {
         try {
-            $query = "INSERT INTO faqs (question, answer, created_at, created_by) VALUES (?, ?, NOW(), ?)";
+            $query = "INSERT INTO faqs (question, answer, category, created_at, created_by) VALUES (?, ?, ?, NOW(), ?)";
             $statement = $this->connection->prepare($query);
-            return $statement->execute([$question, $answer, $created_by]);
+            return $statement->execute([$question, $answer, $category, $created_by]);
         } catch (PDOException $e) {
             die("Error adding FAQ: " . $e->getMessage());
         }
@@ -45,11 +45,11 @@ class FaqsClass {
     /**
      * Edit an existing FAQ
      */
-    public function editFAQ($faq_id, $question, $answer, $updated_by) {
+    public function editFAQ($faq_id, $question, $answer, $category, $updated_by) {
         try {
-            $query = "UPDATE faqs SET question = ?, answer = ?, updated_at = NOW(), updated_by = ? WHERE faq_id = ?";
+            $query = "UPDATE faqs SET question = ?, answer = ?, category = ?, updated_at = NOW(), updated_by = ? WHERE faq_id = ?";
             $statement = $this->connection->prepare($query);
-            return $statement->execute([$question, $answer, $updated_by, $faq_id]);
+            return $statement->execute([$question, $answer, $category, $updated_by, $faq_id]);
         } catch (PDOException $e) {
             die("Error editing FAQ: " . $e->getMessage());
         }

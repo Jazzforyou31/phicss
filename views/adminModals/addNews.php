@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['news_title'] ?? '';
     $description = $_POST['news_description'] ?? '';
     $messageContent = $_POST['message'] ?? '';
+    $category = $_POST['category'] ?? ''; // Default category if none provided
     $newsDate = $_POST['news_date'] ?? date('Y-m-d');
     $author = $_POST['author'] ?? 'Unknown';
     $createdBy = $userId; // Use the user ID we determined above
@@ -54,7 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $success = $newsClass->addNews($title, $description, $messageContent, $image, $newsDate, $author, $createdBy);
+     // Calculate the "Latest" tag dynamically
+     $isLatest = (strtotime($newsDate) >= strtotime('-7 days')) ? true : false;
+
+    $success = $newsClass->addNews($title, $description, $messageContent, $category, $image, $newsDate, $author, $createdBy, $isLatest);
     
     echo json_encode(["status" => $success ? "success" : "error"]);
     exit;

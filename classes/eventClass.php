@@ -142,4 +142,12 @@ class EventClass {
             return false;
         }
     }
+
+    // public function getUpcomingEventsCount() {
+    //     $query = "SELECT COUNT(*) AS upcoming_events FROM events WHERE _date >= CURDATE()";
+    //     $stmt = $this->db->prepare($query);
+    //     $stmt->execute();
+    //     $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    //     return $result['upcoming_events'];
+    // }
 }

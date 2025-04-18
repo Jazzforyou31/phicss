@@ -1,0 +1,13 @@
+UPDATE POST data received: Array
+(
+    [user_id] => 1
+    [username] => nice
+    [first_name] => nice
+    [middle_name] => nice
+    [last_name] => nice
+    [email] => nices@gmail.com
+    [role] => Moderator
+)
+
+Processed update form data: userId=1, username=nice, firstName=nice, middleName=nice, lastName=nice, email=nices@gmail.com, role=Moderator
+Update result: success

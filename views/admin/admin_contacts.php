@@ -1,3 +1,12 @@
+<?php
+require_once '../../classes/ContactsClass.php';
+
+// Initialize ContactClass
+$contacts = new ContactClass();
+
+// Fetch contact data from the database
+$contactList = $contacts->fetchAllContacts();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,9 +17,56 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../../css/admin_contacts.css">
+    <style>
+        /* Styling for containers */
+        .section-container {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two-column layout */
+            gap: 20px; /* Space between columns */
+        }
+
+        .contact-box {
+            display: flex;
+            flex-direction: column; /* Stack labels and inputs vertically */
+            gap: 10px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="time"] {
+            width: 100%;
+            max-width: 400px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .contact-section {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-
 <div class="content">
     <div class="container-fluid">
         <div class="page-header">
@@ -28,51 +84,89 @@
             <button type="button" class="btn btn-primary" id="editAboutBtn"><i class="fas fa-edit"></i> Edit About PHICSS</button>
         </div>
 
-        <div class="contact-section">
-            <label>Location</label>
-            <div class="contact-box">
-                <p><i class="fas fa-map-marker-alt"></i> 123 Main Street, City, Country</p>
-            </div>
-        </div>
+        <?php if (!empty($contactList)): ?>
+            <?php foreach ($contactList as $contact): ?>
 
-        <div class="contact-grid">
-            <div class="contact-section">
-                <label>Contact Emails</label>
-                <div class="contact-box">
-                    <label><i class="fas fa-envelope"></i> General Inquiries</label>
-                    <input type="email" value="info@computing.edu.ph" readonly>
-                    <label><i class="fas fa-envelope"></i> Admissions</label>
-                    <input type="email" value="admissions@computing.edu.ph" readonly>
+                <!-- Location Section -->
+                <div class="section-container">
+                    <div class="section-title">Location</div>
+                    <div class="contact-grid">
+                        <div class="contact-box">
+                            <label><i class="fas fa-map-marker-alt"></i> Street</label>
+                            <input type="text" name="street" value="<?php echo htmlspecialchars($contact['street']); ?>">
+                        </div>
+                        <div class="contact-box">
+                            <label><i class="fas fa-building"></i> Campus</label>
+                            <input type="text" name="campus" value="<?php echo htmlspecialchars($contact['campus']); ?>">
+                        </div>
+                        <div class="contact-box">
+                            <label><i class="fas fa-university"></i> Building</label>
+                            <input type="text" name="building" value="<?php echo htmlspecialchars($contact['building']); ?>">
+                        </div>
+                        <div class="contact-box">
+                            <label><i class="fas fa-city"></i> City</label>
+                            <input type="text" name="city" value="<?php echo htmlspecialchars($contact['city']); ?>">
+                        </div>
+                        <div class="contact-box">
+                            <label><i class="fas fa-map"></i> Province</label>
+                            <input type="text" name="province" value="<?php echo htmlspecialchars($contact['province']); ?>">
+                        </div>
+                        <div class="contact-box">
+                            <label><i class="fas fa-flag"></i> Country</label>
+                            <input type="text" name="country" value="<?php echo htmlspecialchars($contact['country']); ?>">
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="contact-section">
-                <label>Contact Number</label>
-                <div class="contact-box">
-                    <label><i class="fas fa-phone"></i> Main Office</label>
-                    <input type="text" value="+123 456 7890" readonly>
-                    <label><i class="fas fa-phone"></i> Student Affairs</label>
-                    <input type="text" value="+987 654 3210" readonly>
-                </div>
-            </div>
-        </div>
+                <!-- Contact Information Section -->
+                <div class="section-container">
+                    <div class="section-title">Contact Information</div>
+                    <div class="contact-grid">
+                        <div class="contact-section">
+                            <label>Contact Emails</label>
+                            <div class="contact-box">
+                                <label><i class="fas fa-envelope"></i> Primary Email</label>
+                                <input type="email" value="<?php echo htmlspecialchars($contact['primary_email']); ?>" readonly>
+                                <label><i class="fas fa-envelope"></i> Alternative Email</label>
+                                <input type="email" value="<?php echo htmlspecialchars($contact['alternative_email']); ?>" readonly>
+                            </div>
+                        </div>
 
-        <div class="contact-grid">
-            <div class="contact-section">
-                <label>Business Hours</label>
-                <div class="time-input">
-                    <label><i class="fas fa-clock"></i> Opening Time</label>
-                    <input type="text" value="10:00 AM" readonly>
+                        <div class="contact-section">
+                            <label>Contact Numbers</label>
+                            <div class="contact-box">
+                                <label><i class="fas fa-phone"></i> Primary Number</label>
+                                <input type="text" value="<?php echo htmlspecialchars($contact['primary_number']); ?>" readonly>
+                                <label><i class="fas fa-phone"></i> Secondary Number</label>
+                                <input type="text" value="<?php echo htmlspecialchars($contact['secondary_number']); ?>" readonly>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="contact-section">
-                <label>&nbsp;</label>
-                <div class="time-input">
-                    <label><i class="fas fa-clock"></i> Closing Time</label>
-                    <input type="text" value="05:00 PM" readonly>
+
+                <!-- Business Hours Section -->
+                <div class="contact-grid">
+                    <div class="contact-section">
+                        <label>Business Hours</label>
+                        <div class="time-input">
+                            <label><i class="fas fa-clock"></i> Opening Time</label>
+                            <input type="time" name="opening_time" value="<?php echo htmlspecialchars(date('H:i', strtotime($contact['opening_time']))); ?>">
+                        </div>
+                    </div>
+                    <div class="contact-section">
+                        <label>&nbsp;</label>
+                        <div class="time-input">
+                            <label><i class="fas fa-clock"></i> Closing Time</label>
+                            <input type="time" name="closing_time" value="<?php echo htmlspecialchars(date('H:i', strtotime($contact['closing_time']))); ?>">
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+
+
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No contact information available.</p>
+        <?php endif; ?>
     </div>
 </div>
 

@@ -44,7 +44,6 @@
 .search-and-button-container {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     padding: 15px 20px;
     background-color: white;
     border-radius: var(--radius-md);
@@ -52,10 +51,13 @@
     box-shadow: var(--shadow-sm);
 }
 
+
+
 .search-container {
     display: flex;
     align-items: center;
     width: 300px;
+    
 }
 
 .search-container input[type="text"] {
@@ -234,7 +236,7 @@
     box-shadow: var(--shadow-md);
 }
 
-.edit-btn {
+.view-btn {
     color: var(--warning);
 }
 
@@ -298,3 +300,6 @@
         flex-direction: column;
     }
 }
+
+
+

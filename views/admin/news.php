@@ -5,6 +5,21 @@ require '../../classes/newsClass.php';
 
 $newsClass = new NewsClass();
 $newsList = $newsClass->fetchNewsByAdmin();
+
+// Handle "Mark as Latest" requests
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['news_id'], $_POST['is_latest'])) {
+    $news_id = intval($_POST['news_id']);
+    $is_latest = filter_var($_POST['is_latest'], FILTER_VALIDATE_BOOLEAN);
+
+    $result = $newsClass->updateIsLatest($news_id, $is_latest);
+
+    if ($result) {
+        echo json_encode(['status' => 'success', 'message' => 'Updated successfully']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Failed to update']);
+    }
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -54,21 +69,18 @@ $newsList = $newsClass->fetchNewsByAdmin();
                             $imagePath = '../../assets/images/' . htmlspecialchars($news['image']);
                             
                             // Check if image is a URL or doesn't exist
-                            if (!file_exists($imagePath) || 
-                                filter_var($news['image'], FILTER_VALIDATE_URL) || 
-                                strpos($news['image'], 'http') === 0) {
-                                $imageSrc = $defaultImage;
-                            } else {
-                                $imageSrc = $imagePath;
-                            }
+                            $imageSrc = (!file_exists($imagePath) || filter_var($news['image'], FILTER_VALIDATE_URL) || strpos($news['image'], 'http') === 0)
+                                ? $defaultImage
+                                : $imagePath;
                             ?>
                             <img src="<?php echo $imageSrc; ?>" alt="<?php echo htmlspecialchars($news['news_title']); ?>" onerror="this.src='<?php echo $defaultImage; ?>'">
                         </div>
                         <div class="news-content">
+                            <h5 class="category">Category: <?php echo htmlspecialchars($news['category']); ?></h5>
                             <p class="news-date"><?php echo date('M d, Y', strtotime($news['news_date'])); ?></p>
                             <h2 class="news-title"><?php echo htmlspecialchars($news['news_title']); ?></h2>
-                            <p class="news-description"><?php echo nl2br(htmlspecialchars(substr($news['news_description'], 0, 150) . (strlen($news['news_description']) > 150 ? '...' : ''))); ?></p>
-                            <p class="news-author"><?php echo htmlspecialchars($news['author']); ?></p>
+                            <p class="news-description"><?php echo nl2br(htmlspecialchars(substr($news['news_description'], 0, 150))) . (strlen($news['news_description']) > 150 ? '...' : ''); ?></p>
+                            <p class="news-author">Author: <?php echo htmlspecialchars($news['author']); ?></p>
                         </div>
                         <div class="action-icons">
                             <button type="button" class="edit-btn btn" data-id="<?php echo $news['news_id']; ?>" title="Edit Article" onclick="editNews(<?php echo $news['news_id']; ?>)">
@@ -77,6 +89,12 @@ $newsList = $newsClass->fetchNewsByAdmin();
                             <button type="button" class="delete-btn btn" data-id="<?php echo $news['news_id']; ?>" title="Delete Article" onclick="deleteNews(<?php echo $news['news_id']; ?>)">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
+                        </div>
+                        <div class="toggle-latest">
+                            <label for="is_latest_<?php echo $news['news_id']; ?>">Mark as Latest:</label>
+                            <input type="checkbox" id="is_latest_<?php echo $news['news_id']; ?>"
+                                onchange="toggleIsLatest(<?php echo $news['news_id']; ?>, this.checked)"
+                                <?php echo isset($news['is_latest']) && $news['is_latest'] ? 'checked' : ''; ?>>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -90,5 +108,49 @@ $newsList = $newsClass->fetchNewsByAdmin();
 </div>
 
 <script src="../../js/news.js"></script>
+<script>
+// Function to toggle "Mark as Latest"
+function toggleIsLatest(newsId, isLatest) {
+    console.log("Toggle 'Mark as Latest' for News ID:", newsId);
+
+    // Show loading indicator on the checkbox
+    var checkbox = document.querySelector(`#is_latest_${newsId}`);
+    checkbox.disabled = true;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '<?php echo basename(__FILE__); ?>', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            try {
+                var result = JSON.parse(xhr.responseText);
+                if (result.status === 'success') {
+                    alert(result.message);
+                } else {
+                    alert("Error: " + result.message);
+                    checkbox.checked = !isLatest; // Revert checkbox
+                }
+            } catch (e) {
+                alert("Invalid server response.");
+                console.error(e, xhr.responseText);
+                checkbox.checked = !isLatest; // Revert checkbox
+            }
+        } else {
+            alert("Server error: " + xhr.status);
+            checkbox.checked = !isLatest; // Revert checkbox
+        }
+        checkbox.disabled = false;
+    };
+
+    xhr.onerror = function () {
+        alert("Network error. Please try again later.");
+        checkbox.checked = !isLatest; // Revert checkbox
+        checkbox.disabled = false;
+    };
+
+    xhr.send('news_id=' + newsId + '&is_latest=' + isLatest);
+}
+</script>
 </body>
 </html>

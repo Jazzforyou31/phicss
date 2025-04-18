@@ -72,16 +72,34 @@ if (!isset($base_url)) {
                     <span>Users</span>
                 </a>
             </li>
-            <li class="<?php echo ($current_page == 'faqs') ? 'active' : ''; ?>">
+            <li class="<?php echo ($current_page == 'officers') ? 'active' : ''; ?>">
+                <a href="#" onclick="loadOfficerSection()">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Officers</span>
+                </a>
+            </li>
+            <li class="<?php echo ($current_page == 'volunteer') ? 'active' : ''; ?>">
+                <a href="#" onclick="loadVolunteerSection()">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>Volunteers</span>
+                </a>
+            <li class="<?php echo ($current_page == 'message') ? 'active' : ''; ?>">
+                <a href="#" onclick="loadMessageSection()">
+                    <i class="fas fa-envelope"></i> <!-- Changed icon -->
+                    <span>Inquiries</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <hr class="sidebar-divider">
+    <div class="menu-section">
+        <div class="menu-label">CONTENT MANAGEMENT</div>
+        <ul class="menu-items">
+        <li class="<?php echo ($current_page == 'faqs') ? 'active' : ''; ?>">
                 <a href="#" onclick="loadFaqsSection()">
                     <i class="fas fa-question-circle"></i>
                     <span>FAQs</span>
-                </a>
-            </li>
-            <li class="<?php echo ($current_page == 'events') ? 'active' : ''; ?>">
-                <a href="#" onclick="loadEventsSection()">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>Events & Calendar</span>
                 </a>
             </li>
             <li class="<?php echo ($current_page == 'news') ? 'active' : ''; ?>">
@@ -90,25 +108,32 @@ if (!isset($base_url)) {
                     <span>News</span>
                 </a>
             </li>
+            <li class="<?php echo ($current_page == 'events') ? 'active' : ''; ?>">
+                <a href="#" onclick="loadEventsSection()">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Events & Calendar</span>
+                </a>
+            </li>
             <li class="<?php echo ($current_page == 'transparency') ? 'active' : ''; ?>">
                 <a href="#" onclick="loadTransparencySection()">
                     <i class="fas fa-file-alt"></i>
                     <span>Transparency Report</span>
                 </a>
             </li>
-            <li class="<?php echo ($current_page == 'officers') ? 'active' : ''; ?>">
-                <a href="#" onclick="loadOfficerSection()">
-                    <i class="fas fa-users"></i>
-                    <span>Officers</span>
+            <li class="<?php echo ($current_page == 'collection') ? 'active' : ''; ?>">
+                <a href="#" onclick="loadCollectionSection()">
+                    <i class="fas fa-coins"></i>
+                    <span>Total Collection</span>
                 </a>
             </li>
         </ul>
     </div>
+
     
     <hr class="sidebar-divider">
     
     <div class="menu-section">
-        <div class="menu-label">CONTENT MANAGEMENT</div>
+        <div class="menu-label">OTHERS</div>
         <ul class="menu-items">
             <li class="<?php echo ($current_page == 'settings') ? 'active' : ''; ?>">
                 <a href="#" onclick="loadSettingSection()">
@@ -117,10 +142,18 @@ if (!isset($base_url)) {
                 </a>
             </li>
         </ul>
+        <ul class="menu-items">
+            <li class="<?php echo ($current_page == 'feedback') ? 'active' : ''; ?>">
+                <a href="#" onclick="loadFeedbackSection()">
+                    <i class="ffas fa-comments"></i>
+                    <span>Feedback and Ratings</span>
+                </a>
+            </li>
+        </ul>
     </div>
     
     <div class="sidebar-footer">
-        <a href="<?php echo $base_url; ?>accounts/logout.php" class="logout-btn">
+        <a href="<?php echo $base_url; ?>logout.php" class="logout-btn">
             <i class="fas fa-sign-out-alt"></i>
             <span>Logout</span>
         </a>
