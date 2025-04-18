@@ -12,17 +12,10 @@ class CollectionClass {
     /**
      * Fetch all collections
      */
-    public function fetchCollections($schoolYearId = null) {
+    public function fetchCollections() {
         try {
-            if ($schoolYearId) {
-                $query = "SELECT * FROM collection WHERE payment_school_year_id = :schoolYearId ORDER BY id ASC";
-                $statement = $this->connection->prepare($query);
-                $statement->bindParam(':schoolYearId', $schoolYearId, PDO::PARAM_INT);
-            } else {
-                $query = "SELECT * FROM collection ORDER BY id ASC";
-                $statement = $this->connection->prepare($query);
-            }
-            
+            $query = "SELECT * FROM collection ORDER BY id ASC";
+            $statement = $this->connection->prepare($query);
             $statement->execute();
             return $statement->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $exception) {

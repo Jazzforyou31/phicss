@@ -57,13 +57,6 @@ $filtered = $collection->fetchCollections(1); // Fetch only school year ID 3
       <p class="header-subtitle">Admin Panel</p>
     </header>
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-  <div class="d-flex gap-2 align-items-center">
-    <label for="schoolYearFilter" class="form-label mb-0">Filter by School Year:</label>
-    <select id="schoolYearFilter" class="form-select" style="width: auto;"></select>
-    <button id="applyFilter" class="btn btn-primary">Filter</button>
-  </div>
-</div>  
 
     <div class="summary-buttons">
       <div class="button">
