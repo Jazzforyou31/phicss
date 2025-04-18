@@ -1,303 +1,195 @@
 <?php
 require '../../classes/collectionClass.php';
+$collection = new CollectionClass();
+$cashInRecords = $collection->fetchCashIn();
+$cashOutRecords = $collection->fetchCashOut();
+$totalCashIn = $collection->getTotalCashIn();
+$totalCashOut = $collection->getTotalCashOut();
+$netIncome = $totalCashIn - $totalCashOut;
 
-$collectionObj = new CollectionClass();
-$schoolYears = $collectionObj->fetchSchoolYears();
-$schoolYearId = isset($_GET['schoolYear']) ? $_GET['schoolYear'] : null;
-$collections = $collectionObj->fetchAllCollections($schoolYearId);
+$collections = $collection->fetchCollections(); // Fetch all
+$filtered = $collection->fetchCollections(1); // Fetch only school year ID 3
+
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Total Collection</title>
-    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/css/fontawesome.min.css">
-    <style>
-        .collection-container {
-            padding: 40px;
-        }
-
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-
-        .collection-box {
-            width: 30%;
-            background-color: #f8f9fa;
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            position: relative;
-            text-align: center;
-            transition: transform 0.3s;
-        }
-
-        .collection-box:hover {
-            transform: scale(1.05);
-        }
-
-        .collection-box h5 {
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-
-        .collection-box p {
-            font-size: 16px;
-        }
-
-        .plus-icon {
-            font-size: 22px;
-            color: #28a745;
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            cursor: pointer;
-        }
-
-        .total-box {
-            background-color: #e9ecef;
-            font-weight: bold;
-        }
-
-        .btn-primary {
-            margin-top: 20px;
-        }
-
-        .header {
-            margin-bottom: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings | PhiCCS Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="../../css/admin_sidebar.css">
+  <style>
+    body { background-color: #f3f4f6; }
+    .content { padding: 20px; }
+    .header-title { font-weight: 600; color: #1f2937; }
+    .header-subtitle { color: #6b7280; font-size: 0.875rem; margin-top: 0.25rem; }
+    .summary-buttons { display: flex; gap: 1rem; margin-bottom: 2rem; }
+    .button { flex: 1; background-color: white; border: 1px solid #d1d5db; border-radius: 0.5rem; padding: 1rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+    .button:hover { box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); }
+    .amount-green { color: #10b981; font-size: 1.25rem; font-weight: bold; }
+    .amount-red { color: #ef4444; font-size: 1.25rem; font-weight: bold; }
+    .table-section { background-color: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); margin-bottom: 2rem; }
+    .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .table th, .table td { vertical-align: middle; text-align: center; font-size: 0.875rem; }
+    .total-row { background-color: #f9fafb; font-weight: 600; }
+    .add-button { background-color: #4f46e5; color: white; border: none; border-radius: 0.375rem; padding: 6px 12px; }
+    .add-button.btn-danger { background-color: #ef4444; }
+    .amount-purple {
+  color: #6b21a8; /* Purple */
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+  </style>
 </head>
+<link rel="stylesheet" href="../../css/admin_collection.css">
 <body>
-<div class="container collection-container">
-    <div class="header d-flex justify-content-between align-items-center mb-4">
-        <h2>Total Collection Records</h2>
-        <div class="d-flex align-items-center gap-2">
-            <form action="" method="GET">
-                <select name="schoolYear" id="schoolYearFilter" class="form-select" style="width: 200px;" onchange="this.form.submit()">
-                    <option value="">All School Years</option>
-                    <?php foreach ($schoolYears as $year): ?>
-                        <option value="<?= $year['school_year_id'] ?>" <?= isset($schoolYearId) && $schoolYearId == $year['school_year_id'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($year['school_year']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </form>
-        </div>
+
+  <div class="content">
+    <header class="mb-4">
+      <h1 class="header-title">Cash In/Out Management</h1>
+      <p class="header-subtitle">Admin Panel</p>
+    </header>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+  <div class="d-flex gap-2 align-items-center">
+    <label for="schoolYearFilter" class="form-label mb-0">Filter by School Year:</label>
+    <select id="schoolYearFilter" class="form-select" style="width: auto;"></select>
+    <button id="applyFilter" class="btn btn-primary">Filter</button>
+  </div>
+</div>  
+
+    <div class="summary-buttons">
+      <div class="button">
+        <p>Total Cash In</p>
+        <p class="amount-green">₱<?= number_format($totalCashIn, 2); ?></p>
+      </div>
+      <div class="button">
+        <p>Total Cash Out</p>
+        <p class="amount-red">₱<?= number_format($totalCashOut, 2); ?></p>
+      </div>
+      <div class="button">
+        <p>Net Income</p>
+        <p class="amount-purple">
+          ₱<?= number_format($netIncome, 2); ?>
+        </p>
+      </div>
     </div>
 
-    <div class="row">
-        <?php if (!empty($collections)): ?>
-            <?php foreach ($collections as $row): ?>
-                <div class="collection-box">
-                    <i class="fas fa-plus-circle plus-icon" data-type="membership" title="Add Payment"></i>
-                    <h5>Membership Fee</h5>
-                    <p>₱<?= number_format($row['total_membership_fee'], 2) ?></p>
-                    <button class="btn btn-sm btn-outline-primary mt-2 edit-btn"
-                        onclick='openEditModal({
-                            id: <?= $row["id"] ?? 0 ?>,
-                            amount: <?= $row["total_membership_fee"] ?? 0 ?>,
-                            multiply: 1
-                        })'>Edit</button>
-                </div>
-                <div class="collection-box">
-                    <i class="fas fa-plus-circle plus-icon" data-type="loyalty" title="Add Payment"></i>
-                    <h5>Loyalty Fee</h5>
-                    <p>₱<?= number_format($row['total_loyalty_fee'], 2) ?></p>
-                    <button class="btn btn-sm btn-outline-primary mt-2 edit-btn"
-                        onclick='openEditModal({
-                            id: <?= $row["id"] ?? 0 ?>,
-                            amount: <?= $row["total_loyalty_fee"] ?? 0 ?>,
-                            multiply: 1
-                        })'>Edit</button>
-                </div>
-                <div class="collection-box">
-                    <i class="fas fa-plus-circle plus-icon" data-type="tech_fair" title="Add Payment"></i>
-                    <h5>Tech Fair Fee</h5>
-                    <p>₱<?= number_format($row['total_tech_fair_fee'], 2) ?></p>
-                    <button class="btn btn-sm btn-outline-primary mt-2 edit-btn"
-                        onclick='openEditModal({
-                            id: <?= $row["id"] ?? 0 ?>,
-                            amount: <?= $row["total_loyalty_fee"] ?? 0 ?>,
-                            multiply: 1
-                        })'>Edit</button>
-                </div>
-                <div class="collection-box">
-                    <i class="fas fa-plus-circle plus-icon" data-type="project" title="Add Payment"></i>
-                    <h5>Project Fee</h5>
-                    <p>₱<?= number_format($row['total_project_fee'], 2) ?></p>
-                    <button class="btn btn-sm btn-outline-primary mt-2 edit-btn"
-                        onclick='openEditModal({
-                            id: <?= $row["id"] ?? 0 ?>,
-                            amount: <?= $row["total_loyalty_fee"] ?? 0 ?>,
-                            multiply: 1
-                        })'>Edit</button>
-                </div>
-                <div class="collection-box">
-                    <i class="fas fa-plus-circle plus-icon" data-type="assembly" title="Add Payment"></i>
-                    <h5>Faculty-Student Assembly</h5>
-                    <p>₱<?= number_format($row['total_faculty_student_assembly'], 2) ?></p>
-                    <button class="btn btn-sm btn-outline-primary mt-2 edit-btn"
-                        onclick='openEditModal({
-                            id: <?= $row["id"] ?? 0 ?>,
-                            amount: <?= $row["total_loyalty_fee"] ?? 0 ?>,
-                            multiply: 1
-                        })'>Edit</button>
-                </div>
-                <div class="collection-box total-box">
-                    <h5>Grand Total</h5>
-                    <p>₱<?= number_format($row['grand_total'], 2) ?></p>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <div class="collection-box">
-                <p>No collection data available.</p>
-            </div>
-        <?php endif; ?>
+    <!-- Cash In Table -->
+    <div class="table-section">
+      <div class="table-header">
+        <h2>Cash In</h2>
+        <button class="add-button" data-bs-toggle="modal" data-bs-target="#addCashInModal">
+          <i class="fas fa-plus"></i> Add Cash In
+        </button>
+      </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Created By</th>
+            <th>Date</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($cashInRecords as $cashIn): ?>
+            <tr>
+              <td class="action-icons">
+                <i class="fas fa-edit text-warning" title="Edit"></i>
+                <i class="fas fa-trash text-danger" title="Delete"></i>
+              </td>
+              <td><?= $cashIn['created_by_name']; ?></td>
+              <td><?= $cashIn['collection_date']; ?></td>
+              <td>₱<?= number_format($cashIn['amount'], 2); ?></td>
+            </tr>
+          <?php endforeach; ?>
+          <tr class="total-row">
+            <td colspan="2"></td>
+            <td>Total:</td>
+            <td class="amount-green">₱<?= number_format(array_sum(array_column($cashInRecords, 'amount')), 2); ?></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-</div>
 
-
-
-<!-- Payment Modal -->
-<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="#" method="POST">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="paymentModalLabel">Add Collection</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="paymentTypeHidden" name="payment_type">
-                    
-                    <div class="form-group mb-3">
-                        <label for="paymentAmount">Amount</label>
-                        <input type="number" class="form-control" id="paymentAmount" name="payment_amount" placeholder="Enter Amount" required>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label for="multiplyBy">Multiply By</label>
-                        <input type="number" class="form-control" id="multiplyBy" name="multiply_by" placeholder="e.g. 10" value="1" min="1" required>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label>Total Amount</label>
-                        <input type="text" class="form-control" id="totalAmount" readonly>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Add Collection</button>
-                </div>
-            </form>
-        </div>
+    <!-- Cash Out Table -->
+    <div class="table-section">
+      <div class="table-header">
+        <h2>Cash Out</h2>
+        <button class="add-button btn btn-danger" data-bs-toggle="modal" data-bs-target="#addCashOutModal">
+          <i class="fas fa-plus"></i> Add Cash Out
+        </button>
+      </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Created By</th>
+            <th>Date</th>
+            <th>Details</th>
+            <th>Category</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($cashOutRecords as $cashOut): ?>
+            <tr>
+              <td class="action-icons">
+                <i class="fas fa-edit text-warning" title="Edit"></i>
+                <i class="fas fa-trash text-danger" title="Delete"></i>
+              </td>
+              <td><?= $cashOut['created_by_name']; ?></td>
+              <td><?= $cashOut['cashout_date']; ?></td>
+              <td><?= $cashOut['expense_details']; ?></td>
+              <td><?= $cashOut['expense_category']; ?></td>
+              <td>₱<?= number_format($cashOut['amount'], 2); ?></td>
+            </tr>
+          <?php endforeach; ?>
+          <tr class="total-row">
+            <td colspan="4"></td>
+            <td>Total:</td>
+            <td class="amount-red">₱<?= number_format(array_sum(array_column($cashOutRecords, 'amount')), 2); ?></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-</div>
+  </div>
 
+ 
 
-<!-- Edit Collection Modal -->
-<div class="modal fade" id="editPaymentModal" tabindex="-1" aria-labelledby="editPaymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="#" method="POST" id="editPaymentForm">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editPaymentModalLabel">Edit Collection</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    <!-- Hidden ID for updating the correct record -->
-                    <input type="hidden" id="editPaymentId" name="payment_id">
-
-                    <div class="form-group mb-3">
-                        <label for="editPaymentAmount">Amount</label>
-                        <input type="number" class="form-control" id="editPaymentAmount" name="payment_amount" required>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label for="editMultiplyBy">Multiply By</label>
-                        <input type="number" class="form-control" id="editMultiplyBy" name="multiply_by" min="1" required>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label>Total Amount</label>
-                        <input type="text" class="form-control" id="editTotalAmount" readonly>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Update Collection</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-
-<script src="../assets/js/bootstrap.bundle.min.js"></script>
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
-<script>
-    // Open modal when plus icon is clicked
-    document.querySelectorAll('.plus-icon').forEach(icon => {
-        icon.addEventListener('click', function () {
-            const type = this.getAttribute('data-type');
-            document.getElementById('paymentTypeHidden').value = type;
-            const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
-            modal.show();
+  <script>
+$(document).ready(function () {
+  // Fetch school years for dropdown
+  $.ajax({
+    url: '../../ajax/getSchoolYears.php',
+    method: 'GET',
+    success: function (res) {
+      if (res.success) {
+        $('#schoolYearFilter').append(`<option value="">All</option>`);
+        res.data.forEach(year => {
+          $('#schoolYearFilter').append(`<option value="${year.school_year_id}">${year.school_year}</option>`);
         });
-    });
-
-
-    // Handle form submission
-    const amountInput = document.getElementById('paymentAmount');
-    const multiplyInput = document.getElementById('multiplyBy');
-    const totalField = document.getElementById('totalAmount');
-
-    function updateTotal() {
-        const amount = parseFloat(amountInput.value) || 0;
-        const multiplier = parseInt(multiplyInput.value) || 1;
-        const total = amount * multiplier;
-        totalField.value = `₱${total.toFixed(2)}`;
+      }
     }
+  });
 
-    amountInput.addEventListener('input', updateTotal);
-    multiplyInput.addEventListener('input', updateTotal);
+  $('#applyFilter').on('click', function () {
+    const selectedYear = $('#schoolYearFilter').val();
 
-    // Handle form submission for edit collection
-    const editAmountInput = document.getElementById('editPaymentAmount');
-    const editMultiplyInput = document.getElementById('editMultiplyBy');
-    const editTotalField = document.getElementById('editTotalAmount');
-
-    function updateEditTotal() {
-        const amount = parseFloat(editAmountInput.value) || 0;
-        const multiplier = parseInt(editMultiplyInput.value) || 1;
-        const total = amount * multiplier;
-        editTotalField.value = `₱${total.toFixed(2)}`;
-    }
-
-    editAmountInput.addEventListener('input', updateEditTotal);
-    editMultiplyInput.addEventListener('input', updateEditTotal);
-
-    // Optional: Populate edit modal with values
-    function openEditModal(data) {
-        document.getElementById('editPaymentId').value = data.id;
-        editAmountInput.value = data.amount;
-        editMultiplyInput.value = data.multiply;
-        updateEditTotal();
-        $('#editPaymentModal').modal('show');
-    }
-
+    // Redirect with filter as a GET parameter (for now, PHP will handle filtering)
+    window.location.href = `?school_year_id=${selectedYear}`;
+  });
+});
 
 </script>
+
 </body>
 </html>

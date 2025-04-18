@@ -20,4 +20,5 @@ if (strpos($_SERVER['REQUEST_URI'], '/phicss') !== false) {
 
 // Redirect to the landing page
 header('Location: ' . $base_url . 'views/user/landing_page.php');
+
 exit;

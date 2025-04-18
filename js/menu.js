@@ -164,43 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // -----------------------------------------
-    // ANNOUNCEMENT BANNER NAVIGATION
-    // -----------------------------------------
-    function handleAnnouncementNavigation() {
-        const navArrows = document.querySelectorAll('.nav-arrow');
-        const announcements = [
-            "Part Time Offer for Computing Studies Students",
-            "Upcoming Webinar: Web Development Trends 2024",
-            "Registration Open for Summer Programming Workshop"
-        ];
-        
-        let currentAnnouncementIndex = 0;
-        
-        if (navArrows.length >= 2) {
-            function updateAnnouncementText(index) {
-                const announcementText = document.querySelector('.announcement-text a');
-                if (announcementText) {
-                    announcementText.textContent = announcements[index];
-                }
-            }
-            
-            // Previous arrow click
-            navArrows[0].addEventListener('click', function() {
-                currentAnnouncementIndex = (currentAnnouncementIndex - 1 + announcements.length) % announcements.length;
-                updateAnnouncementText(currentAnnouncementIndex);
-            });
-            
-            // Next arrow click
-            navArrows[1].addEventListener('click', function() {
-                currentAnnouncementIndex = (currentAnnouncementIndex + 1) % announcements.length;
-                updateAnnouncementText(currentAnnouncementIndex);
-            });
-        }
-    }
-    
-    // Initialize announcement navigation
-    handleAnnouncementNavigation();
+   
 });
     
 

@@ -36,7 +36,7 @@ header.sticky {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 50px;
+    padding: 12px 30px;
     background-color: white;
 }
 
@@ -46,9 +46,9 @@ header.sticky {
 }
 
 .logo-container img {
-    width: 80px;
+    width: 65px;
     height: auto;
-    margin-right: 15px;
+    margin-right: 12px;
 }
 
 .title-container {
@@ -58,7 +58,7 @@ header.sticky {
 
 .title-container h1 {
     color: #005500;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
     margin: 0;
     line-height: 1.2;
@@ -66,7 +66,7 @@ header.sticky {
 
 .title-container p {
     color: #333;
-    font-size: 14px;
+    font-size: 12px;
     margin: 0;
 }
 
@@ -113,7 +113,7 @@ header.sticky {
 
 .main-nav {
     background-color: #0B2603;
-    padding: 0 50px;
+    padding: 0 30px;
     position: relative;
     transition: all 0.3s ease;
 }
@@ -133,9 +133,9 @@ header.sticky {
 .nav-links a {
     color: white;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 500;
-    padding: 15px 25px;
+    padding: 12px 18px;
     display: block;
     transition: color 0.3s;
     position: relative;
@@ -356,13 +356,16 @@ header.sticky {
 @media screen and (max-width: 768px) {
     .top-header {
         flex-direction: column;
-        padding: 15px;
+        padding: 10px 15px;
     }
     
     .logo-container {
         margin-bottom: 15px;
     }
-    
+
+    .logo-container img {
+        width: 55px;
+    }
     
     .main-nav {
         padding: 15px;

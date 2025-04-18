@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['news_id'])) {
     $title = $_POST['news_title'] ?? '';
     $description = $_POST['news_description'] ?? '';
     $messageContent = $_POST['message'] ?? '';
+    $category = $_POST['category'] ?? '';
     $newsDate = $_POST['news_date'] ?? date('Y-m-d');
     $author = $_POST['author'] ?? '';
     $keepCurrentImage = isset($_POST['keep_current_image']) && $_POST['keep_current_image'] == '1';
@@ -70,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['news_id'])) {
     }
     
     // Update the news article
-    $success = $newsClass->updateNewsById($newsId, $title, $description, $messageContent, $image, $newsDate, $author);
+    $success = $newsClass->updateNewsById($newsId, $title, $description, $messageContent, $category, $image, $newsDate, $author);
     error_log("Update result: " . ($success ? 'success' : 'failure'));
     
     echo json_encode([

@@ -1,13 +1,12 @@
 $(document).ready(function () {
     function loadContent(target) {
         var contentArea = $("#content-area");
-        var url = target === "announcement" ? "../admin/admin_announcement.php" : target;
 
         $(".nav-btn").removeClass("active");
         $(".nav-btn[data-target='" + target + "']").addClass("active");
 
         $.ajax({
-            url: url,
+            url: target,
             type: "GET",
             dataType: "html",
             beforeSend: function () {
@@ -22,8 +21,8 @@ $(document).ready(function () {
         });
     }
 
-    // Load announcement by default
-    loadContent("announcement");
+    // Load "About PhiCSS" by default
+    loadContent("admin_about_phicss.php");
 
     // Click event for navigation buttons
     $(".nav-btn").click(function () {

@@ -68,7 +68,7 @@
                 </li>
                 <li><a href="<?php echo $base_url; ?>views/user/news" class="<?php echo (strpos($_SERVER['REQUEST_URI'], '/news') !== false) ? 'active' : ''; ?>">News</a></li>
                 <li><a href="<?php echo $base_url; ?>views/user/events" class="<?php echo (strpos($_SERVER['REQUEST_URI'], '/events') !== false) ? 'active' : ''; ?>">Events</a></li>
-                <li><a href="<?php echo $base_url; ?>views/user/transparency" class="<?php echo (strpos($_SERVER['REQUEST_URI'], '/transparency') !== false) ? 'active' : ''; ?>">Transparency Report</a></li>
+                <li><a href="<?php echo $base_url; ?>views/user/transparency" class="<?php echo (strpos($_SERVER['REQUEST_URI'], '/transparency') !== false) ? 'active' : ''; ?>">Transparency Page</a></li>
             </ul>
         </nav>
     </header>

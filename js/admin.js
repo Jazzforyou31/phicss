@@ -339,6 +339,52 @@ function loadVolunteerSection() {
 }
 
 
+function loadMessageSection() {
+    // Show loading indicator
+    $('#contentArea').html('<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</div>');
+    
+    $.ajax({
+        url: "../../views/admin/message.php",
+        method: 'GET',
+        success: function (response) {
+            $('#contentArea').html(response);
+            // Update active state in sidebar
+            $('.menu-items li').removeClass('active');
+            $('.menu-items li a:contains("message")').parent().addClass('active');
+            // Update page title
+            document.title = "Inquiries | PhiCCS Admin";
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading inquiries section:', error);
+            $('#contentArea').html('<p class="text-danger">Failed to load inquiries section. Please try again.</p>');
+        }
+    });
+}
+
+
+function loadFeedbackSection() {
+    // Show loading indicator
+    $('#contentArea').html('<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</div>');
+    
+    $.ajax({
+        url: "../../views/admin/feedback.php",
+        method: 'GET',
+        success: function (response) {
+            $('#contentArea').html(response);
+            // Update active state in sidebar
+            $('.menu-items li').removeClass('active');
+            $('.menu-items li a:contains("feedback")').parent().addClass('active');
+            // Update page title
+            document.title = "Feedback | PhiCCS Admin";
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading inquiries section:', error);
+            $('#contentArea').html('<p class="text-danger">Failed to load feedback section. Please try again.</p>');
+        }
+    });
+}
+
+
 
 
 

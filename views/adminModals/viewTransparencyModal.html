@@ -1,0 +1,37 @@
+<div class="modal fade" id="viewTransparencyModal" tabindex="-1" aria-labelledby="viewTransparencyLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content shadow-lg rounded-5">
+            <!-- Modal Header -->
+            <div class="modal-header bg-primary text-white border-0 rounded-top">
+                <h5 class="modal-title fw-bold" id="viewTransparencyLabel">Transparency Section Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body bg-light px-5 py-4">
+                <!-- Section Title -->
+                <div class="mb-4">
+                    <h4 class="fw-bold text-dark text-center" id="view_section_title" contenteditable="false" style="font-size: 1.4rem; letter-spacing: 0.5px;"></h4>
+                </div>
+
+                <!-- Document Links -->
+                <div class="mb-4">
+                    <h6 class="fw-semibold text-dark mb-3" style="font-size: 1.1rem;">Documents:</h6>
+                    <ul id="view_links_container" class="list-group list-group-flush">
+                        <!-- Example Link Item -->
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-bottom py-3">
+                            <span class="document-title text-muted text-truncate" style="font-size: 1rem; line-height: 1.6;">Sample Document Title</span>
+                            <a href="#" target="_blank" class="document-link text-decoration-none text-primary fw-semibold" style="font-size: 1rem; line-height: 1.6;">View Document</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer bg-white border-0 d-flex justify-content-end gap-4 py-3">
+                <button type="button" class="btn btn-outline-secondary fw-semibold" data-bs-dismiss="modal" style="font-size: 1rem; padding: 0.5rem 1rem;">Cancel</button>
+                <button type="button" class="btn btn-primary fw-bold" id="editBtn" style="font-size: 1rem; padding: 0.5rem 1rem;">Edit</button>
+            </div>
+        </div>
+    </div>
+</div>

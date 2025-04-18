@@ -1,107 +1,95 @@
 <?php
-require_once 'databaseClass.php';
+require_once '../../classes/databaseClass.php';
 
 class CollectionClass {
-    private $connection;
+    public $connection;
 
     public function __construct() {
-        $database = new Database();
+        $database = new Database(); // Connect to the database
         $this->connection = $database->connect();
     }
 
     /**
-     * Fetch all collection records with school year details
+     * Fetch all collections
      */
-    public function fetchAllCollections($schoolYearId = null) {
+    public function fetchCollections($schoolYearId = null) {
         try {
-            $query = "
-                SELECT 
-                    SUM(c.membership_fee) AS total_membership_fee,
-                    SUM(c.loyalty_fee) AS total_loyalty_fee,
-                    SUM(c.tech_fair_fee) AS total_tech_fair_fee,
-                    SUM(c.project_fee) AS total_project_fee,
-                    SUM(c.faculty_student_assembly) AS total_faculty_student_assembly,
-                    SUM(c.total) AS grand_total,
-                    sy.school_year 
-                FROM 
-                    collection c 
-                JOIN 
-                    school_year sy ON c.payment_school_year_id = sy.school_year_id
-            ";
-    
-            // Add a WHERE clause if a specific school year is selected
-            if (!empty($schoolYearId)) {
-                $query .= " WHERE sy.school_year_id = :schoolYearId";
-            }
-    
-            $query .= " GROUP BY sy.school_year";
-    
-            $statement = $this->connection->prepare($query);
-    
-            // Bind the school year ID if provided
-            if (!empty($schoolYearId)) {
+            if ($schoolYearId) {
+                $query = "SELECT * FROM collection WHERE payment_school_year_id = :schoolYearId ORDER BY id ASC";
+                $statement = $this->connection->prepare($query);
                 $statement->bindParam(':schoolYearId', $schoolYearId, PDO::PARAM_INT);
+            } else {
+                $query = "SELECT * FROM collection ORDER BY id ASC";
+                $statement = $this->connection->prepare($query);
             }
+            
+            $statement->execute();
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $exception) {
+            die("Error fetching collections: " . $exception->getMessage());
+        }
+    }
     
-            $statement->execute();
-            return $statement->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $exception) {
-            error_log("Error fetching collections: " . $exception->getMessage());
-            return [];
-        }
-    }
 
     /**
-     * Add a new collection record
+     * Fetch cashIn records for a specific collection
      */
-    public function addCollection($membership, $loyalty, $techFair, $project, $assembly, $schoolYearId) {
-        try {
-            $query = "
-                INSERT INTO collection (
-                    membership_fee, 
-                    loyalty_fee, 
-                    tech_fair_fee, 
-                    project_fee, 
-                    faculty_student_assembly, 
-                    payment_school_year_id
-                ) VALUES (
-                    :membership, 
-                    :loyalty, 
-                    :tech_fair, 
-                    :project, 
-                    :assembly, 
-                    :school_year_id
-                )
-            ";
-
-            $statement = $this->connection->prepare($query);
-            $statement->bindParam(':membership', $membership);
-            $statement->bindParam(':loyalty', $loyalty);
-            $statement->bindParam(':tech_fair', $techFair);
-            $statement->bindParam(':project', $project);
-            $statement->bindParam(':assembly', $assembly);
-            $statement->bindParam(':school_year_id', $schoolYearId);
-
-            return $statement->execute();
-        } catch (PDOException $exception) {
-            error_log("Error adding collection: " . $exception->getMessage());
-            return false;
-        }
+    public function fetchCashIn() {
+        $query = "SELECT ci.id, ci.collection_date, ci.amount, ci.created_by, a.username AS created_by_name
+                  FROM cash_in ci
+                  JOIN account a ON ci.created_by = a.user_id
+                  ORDER BY ci.collection_date DESC";
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function fetchCashOut() {
+        $query = "SELECT co.id, co.cashout_date, co.expense_details, co.expense_category, co.amount, co.created_by, a.username AS created_by_name
+                  FROM cash_out co
+                  JOIN account a ON co.created_by = a.user_id
+                  ORDER BY co.cashout_date DESC";
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Fetch all school years
-     */
-    public function fetchSchoolYears() {
+    
+    public function getTotalCashOut() {
         try {
-            $query = "SELECT * FROM school_year ORDER BY school_year DESC";
+            $query = "SELECT SUM(amount) AS totalCashOut FROM cash_out";
             $statement = $this->connection->prepare($query);
             $statement->execute();
-            return $statement->fetchAll(PDO::FETCH_ASSOC);
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+            return $result['totalCashOut'] ?? 0; // Default to 0 if no records
         } catch (PDOException $exception) {
-            error_log("Error fetching school years: " . $exception->getMessage());
-            return [];
+            die("Error fetching total cash-out: " . $exception->getMessage());
         }
     }
+
+    public function getTotalCashIn() {
+        try {
+            $query = "SELECT SUM(amount) AS totalCashIn FROM cash_in";
+            $statement = $this->connection->prepare($query);
+            $statement->execute();
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+            return $result['totalCashIn'] ?? 0; // Default to 0 if no records
+        } catch (PDOException $exception) {
+            die("Error fetching total cash-in: " . $exception->getMessage());
+        }
+    }
+
+
+        public function addCashIn($collectionId, $collectionDate, $amount) {
+            $sql = "INSERT INTO cash_in (collection_id, collection_date, amount)
+                    VALUES (?, ?, ?)";
+            $stmt = $this->connection->prepare($sql);
+            return $stmt->execute([$collectionId, $collectionDate, $amount]);
+        }
+
+// Do the same for fetchCashOut(), getTotalCashIn(), getTotalCashOut()
+
+    
+
 }
 ?>

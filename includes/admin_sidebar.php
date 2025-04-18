@@ -74,7 +74,7 @@ if (!isset($base_url)) {
             </li>
             <li class="<?php echo ($current_page == 'officers') ? 'active' : ''; ?>">
                 <a href="#" onclick="loadOfficerSection()">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-user-tie"></i>
                     <span>Officers</span>
                 </a>
             </li>
@@ -83,11 +83,10 @@ if (!isset($base_url)) {
                     <i class="fas fa-hands-helping"></i>
                     <span>Volunteers</span>
                 </a>
-            </li>
-            <li class="<?php echo ($current_page == 'collection') ? 'active' : ''; ?>">
-                <a href="#" onclick="loadCollectionSection()">
-                    <i class="fas fa-coins"></i>
-                    <span>Total Collection</span>
+            <li class="<?php echo ($current_page == 'message') ? 'active' : ''; ?>">
+                <a href="#" onclick="loadMessageSection()">
+                    <i class="fas fa-envelope"></i> <!-- Changed icon -->
+                    <span>Inquiries</span>
                 </a>
             </li>
         </ul>
@@ -121,6 +120,12 @@ if (!isset($base_url)) {
                     <span>Transparency Report</span>
                 </a>
             </li>
+            <li class="<?php echo ($current_page == 'collection') ? 'active' : ''; ?>">
+                <a href="#" onclick="loadCollectionSection()">
+                    <i class="fas fa-coins"></i>
+                    <span>Total Collection</span>
+                </a>
+            </li>
         </ul>
     </div>
 
@@ -134,6 +139,14 @@ if (!isset($base_url)) {
                 <a href="#" onclick="loadSettingSection()">
                     <i class="fas fa-cog"></i>
                     <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="menu-items">
+            <li class="<?php echo ($current_page == 'feedback') ? 'active' : ''; ?>">
+                <a href="#" onclick="loadFeedbackSection()">
+                    <i class="ffas fa-comments"></i>
+                    <span>Feedback and Ratings</span>
                 </a>
             </li>
         </ul>

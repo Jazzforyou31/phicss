@@ -23,10 +23,12 @@ class NewsClass {
                     n.news_title, 
                     n.news_description, 
                     n.message, 
+                    n.category,
                     n.image, 
                     n.news_date, 
                     n.created_at, 
-                    n.author 
+                    n.author,
+                    n.is_latest
                 FROM 
                     news n
                 ORDER BY 
@@ -45,24 +47,26 @@ class NewsClass {
     /**
      * Add news entry (Optional helper if needed later)
      */
-    public function addNews($title, $description, $message, $image, $newsDate, $author, $createdBy) {
+    public function addNews($title, $description, $message, $category, $image, $newsDate, $author, $createdBy, $isLatest) {
         try {
             // Sanitize image path - ensure it's a valid local file
             $image = $this->validateImagePath($image);
             
             $query = "
-                INSERT INTO news (news_title, news_description, message, image, news_date, created_at, created_by, author)
-                VALUES (:news_title, :news_description, :message, :image, :news_date, NOW(), :created_by, :author)
+                INSERT INTO news (news_title, news_description, message, category, image, news_date, created_at, created_by, author, is_latest)
+                VALUES (:news_title, :news_description, :message, :category, :image, :news_date, NOW(), :created_by, :author, :is_latest)
             ";
             
             $statement = $this->connection->prepare($query);
             $statement->bindParam(':news_title', $title);
             $statement->bindParam(':news_description', $description);
             $statement->bindParam(':message', $message);
+            $statement->bindParam(':category', $category);
             $statement->bindParam(':image', $image);
             $statement->bindParam(':news_date', $newsDate);
             $statement->bindParam(':created_by', $createdBy);
             $statement->bindParam(':author', $author);
+            $statement->bindParam(':is_latest', $isLatest, PDO::PARAM_BOOL); // Assuming is_latest is a boolean
             
             return $statement->execute();
         } catch (PDOException $exception) {
@@ -107,7 +111,7 @@ class NewsClass {
         return $stmt->execute(); // Will return true if successful, false otherwise
     }
 
-    public function updateNewsById($newsId, $title, $description, $message, $image, $date, $author) {
+    public function updateNewsById($newsId, $title, $description, $message, $category, $image, $date, $author) {
         try {
             // Sanitize image path if provided
             if ($image) {
@@ -124,6 +128,7 @@ class NewsClass {
                 news_title = :news_title, 
                 news_description = :news_description, 
                 message = :message, 
+                category = :category,
                 news_date = :news_date, 
                 author = :author, 
                 image = :image 
@@ -134,6 +139,7 @@ class NewsClass {
             $stmt->bindParam(':news_title', $title, PDO::PARAM_STR);
             $stmt->bindParam(':news_description', $description, PDO::PARAM_STR);
             $stmt->bindParam(':message', $message, PDO::PARAM_STR);
+            $stmt->bindParam(':category', $category, PDO::PARAM_STR);
             $stmt->bindParam(':news_date', $date, PDO::PARAM_STR);
             $stmt->bindParam(':author', $author, PDO::PARAM_STR);
             $stmt->bindParam(':image', $image, PDO::PARAM_STR);
@@ -165,6 +171,7 @@ class NewsClass {
                     news_title, 
                     news_description, 
                     message, 
+                    category,
                     image, 
                     news_date, 
                     created_at, 
@@ -189,5 +196,46 @@ class NewsClass {
             error_log("Error searching news: " . $exception->getMessage());
             return [];
         }
+    }
+
+    
+    public function fetchAllCategories() {
+        $query = "SELECT DISTINCT category FROM news";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updateIsLatest($newsId, $isLatest) {
+        try {
+            $sql = "UPDATE news SET is_latest = :isLatest WHERE news_id = :newsId";
+            $stmt = $this->connection->prepare($sql);
+            $stmt->bindParam(':isLatest', $isLatest, PDO::PARAM_BOOL);
+            $stmt->bindParam(':newsId', $newsId, PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Error updating is_latest: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function fetchAllNewsTitles() {
+        try {
+            $sql = "SELECT news_id, news_title FROM news ORDER BY news_date DESC";
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching news titles: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function getTotalContentItems() {
+        $query = "SELECT COUNT(*) AS total_content FROM news";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total_content'];
     }
 }

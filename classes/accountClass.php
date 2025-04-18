@@ -286,5 +286,18 @@ class Account {
             return [];
         }
     }
+
+    public function getTotalUsers() {
+        try {
+            $query = "SELECT COUNT(*) AS total_users FROM account";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['total_users'];
+        } catch (PDOException $exception) {
+            error_log("Error fetching total users: " . $exception->getMessage());
+            return 0;
+        }
+    }
 }
     

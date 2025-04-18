@@ -238,6 +238,43 @@ body {
     color: #4CAF50;
 }
 
+
+.category-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.category-tabs-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0 20px;
+}
+
+.category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.category-tab {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.category-tab:hover,
+.category-tab.active {
+    background-color: #0056b3;
+}
+
+
 @media (max-width: 992px) {
     .card-container {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -273,3 +310,134 @@ body {
     }
 }
 
+
+.title {
+    font-size: 40px; /* Increased font size */
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+        .category-tabs{
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+        
+
+        .container {
+        /* Add padding to the left and right */
+        max-width: 1200px; /* Optional: Limit the maximum width */
+        margin: 0 auto; /* Center the container */
+    }
+
+    .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr; /* Two smaller cards on each side, one large card in the center */
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.side-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.card {
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.small-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.large-card img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.card .label {
+    background: green;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.card .title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.card .meta {
+    font-size: 12px;
+    color: #555;
+}
+
+.card-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.card-btn:hover {
+    background-color: #0056b3;
+}
+
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .bottom-grid img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .card {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .label {
+            background: green;
+            color: white;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+        .title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .meta {
+            font-size: 12px;
+            color: #555;
+        }

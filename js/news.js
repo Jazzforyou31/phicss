@@ -325,6 +325,7 @@ function editNews(id) {
                             document.getElementById('edit_news_title').value = news.news_title;
                             document.getElementById('edit_news_description').value = news.news_description;
                             document.getElementById('edit_message').value = news.message || '';
+                            document.getElementById('edit_category').value = news.category || '';
                             document.getElementById('edit_author').value = news.author;
                             document.getElementById('edit_news_date').value = news.news_date;
                             document.getElementById('current_image').value = news.image || '';
@@ -528,3 +529,4 @@ function deleteNews(id) {
         xhr.send('news_id=' + id);
     }
 }
+

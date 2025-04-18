@@ -19,6 +19,7 @@ if (isset($_GET['news_id'])) {
             'news_title' => $newsData['news_title'],
             'news_description' => $newsData['news_description'],
             'message' => $newsData['message'],
+            'category' => $newsData['category'],
             'news_date' => $newsData['news_date'],
             'author' => $newsData['author']
         ]);
