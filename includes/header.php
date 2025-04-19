@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="header-right">
-            <?php include_once 'announcementBanner.php'; ?>
+                <?php include_once 'announcementBanner.php'; ?>
                 <a href="<?php echo $base_url; ?>views/user/contact" class="contact-btn">Contact Us</a>
             </div>
         </div>
@@ -51,11 +51,11 @@
         <nav class="main-nav">
             <!-- Search box -->
             <div class="search-container">
-                <input type="text" placeholder="Search" class="search-box">
-                <button type="submit" class="search-button">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
+            <button class="search-button" id="searchButton">
+                <i class="fas fa-search"></i> <!-- Search Icon -->Search here..
+            </button> 
+            <input type="text" placeholder="Type to search..." class="search-box" id="searchBox">
+        </div>
             
             <!-- Hamburger menu for mobile -->
             <div class="mobile-toggle" id="mobile-menu-toggle">
@@ -85,3 +85,21 @@
     </header>
 </body>
 </html>
+
+<script>
+const searchButton = document.getElementById('searchButton');
+const searchBox = document.getElementById('searchBox');
+
+searchButton.addEventListener('click', () => {
+    // Toggle the active class on the search box
+    searchBox.classList.toggle('active');
+
+    // Hide the button text when the search box is expanded
+    if (searchBox.classList.contains('active')) {
+        searchButton.classList.add('hidden');
+        searchBox.focus(); // Focus on the input field when expanded
+    } else {
+        searchButton.classList.remove('hidden');
+    }
+});
+</script>
