@@ -42,10 +42,7 @@
                 </div>
             </div>
             <div class="header-right">
-                <div class="announcement-section">
-                    <div class="announcement-label">Announcement</div>
-                    <div class="part-time-offer">Part Time Offer for Computing Studies Students</div>
-                </div>
+            <?php include_once 'announcementBanner.php'; ?>
                 <a href="<?php echo $base_url; ?>views/user/contact" class="contact-btn">Contact Us</a>
             </div>
         </div>

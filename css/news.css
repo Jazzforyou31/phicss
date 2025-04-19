@@ -184,45 +184,6 @@ body {
     color: #777;
 }
 
-.announcement-banner {
-    display: flex;
-    border: 1px solid #ccc;
-    margin: 20px 50px;
-    font-family: 'Roboto', sans-serif;
-}
-
-.announcement-label {
-    background-color: #ff4444;
-    color: white;
-    padding: 10px 15px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    font-weight: 500;
-}
-
-.announcement-content {
-    padding: 10px 15px;
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #fff;
-}
-
-.announcement-text {
-    font-size: 16px;
-}
-
-.announcement-link {
-    color: inherit;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.announcement-link:hover {
-    color: #4CAF50;
-}
 
 .nav-arrows {
     display: flex;
