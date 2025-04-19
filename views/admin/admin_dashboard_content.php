@@ -2,19 +2,19 @@
 require_once '../../classes/accountClass.php'; // For users
 // require_once '../../classes/EventClass.php'; // For events
 require_once '../../classes/newsClass.php'; // For content
-require_once '../../classes/collectionClass.php'; // For total collection
+require_once '../../classes/cashInOutClass.php'; // For total collection
 
 // Initialize classes to interact with the database
 $account = new account();
 // $eventClass = new EventClass();
 $newsClass = new newsClass();
-$collectionClass = new collectionClass();
+$cashInOutClass = new cashInOutClass();
 
 
 $account = $account->getTotalUsers();
 // $upcomingEvents = $eventClass->getUpcomingEventsCount();
 $totalContentItems = $newsClass->getTotalContentItems();
-$totalCashIn = $collectionClass->getTotalCashIn();
+$totalCashIn = $cashInOutClass->getTotalCashIn();
 ?>
 <!DOCTYPE html>
 <html lang="en">

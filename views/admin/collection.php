@@ -1,18 +1,60 @@
 <?php
-require '../../classes/collectionClass.php';
-$collection = new CollectionClass();
-$cashInRecords = $collection->fetchCashIn();
-$cashOutRecords = $collection->fetchCashOut();
-$totalCashIn = $collection->getTotalCashIn();
-$totalCashOut = $collection->getTotalCashOut();
+session_start();
+require '../../classes/cashInOutClass.php';
+
+$cashInOut = new CashInOutClass();
+
+// Handle form submissions for adding Cash In or Cash Out
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $actionType = $_POST['action_type'] ?? null;
+
+    if ($actionType === 'add_cash_in') {
+        $collectionDate = $_POST['collection_date'] ?? null;
+        $amount = $_POST['amount'] ?? null;
+        $schoolYearId = $_POST['school_year_id'] ?? null;
+        $createdBy = $_SESSION['user_id'] ?? null; // Assuming user ID is stored in session
+
+        if ($collectionDate && $amount && $schoolYearId && $createdBy) {
+            $cashInOut->addCashIn($collectionDate, $amount, $schoolYearId, $createdBy);
+            header("Location: collection.php"); // Redirect to avoid form resubmission
+            exit;
+        }
+    } elseif ($actionType === 'add_cash_out') {
+        $cashOutDate = $_POST['cashout_date'] ?? null;
+        $amount = $_POST['amount'] ?? null;
+        $details = $_POST['expense_details'] ?? null;
+        $category = $_POST['expense_category'] ?? null;
+        $schoolYearId = $_POST['school_year_id'] ?? null;
+        $createdBy = $_SESSION['user_id'] ?? null; // Assuming user ID is stored in session
+
+        if ($cashOutDate && $amount && $details && $category && $schoolYearId && $createdBy) {
+            $cashInOut->addCashOut($cashOutDate, $amount, $details, $category, $schoolYearId, $createdBy);
+            header("Location: collection.php"); // Redirect to avoid form resubmission
+            exit;
+        }
+    }
+}
+
+// Get the selected school year from the GET parameter
+$selectedYear = $_GET['school_year_id'] ?? null;
+
+// Fetch records based on the selected school year
+if ($selectedYear) {
+    $cashInRecords = $cashInOut->fetchCashInByYear($selectedYear);
+    $cashOutRecords = $cashInOut->fetchCashOutByYear($selectedYear);
+} else {
+    $cashInRecords = $cashInOut->fetchCashIn();
+    $cashOutRecords = $cashInOut->fetchCashOut();
+}
+
+// Calculate totals
+$totalCashIn = array_sum(array_column($cashInRecords, 'amount'));
+$totalCashOut = array_sum(array_column($cashOutRecords, 'amount'));
 $netIncome = $totalCashIn - $totalCashOut;
 
-$collections = $collection->fetchCollections(); // Fetch all
-$filtered = $collection->fetchCollections(1); // Fetch only school year ID 3
-
-
+// Fetch all school years for the dropdown
+$schoolYears = $cashInOut->fetchSchoolYears();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -42,15 +84,13 @@ $filtered = $collection->fetchCollections(1); // Fetch only school year ID 3
     .add-button { background-color: #4f46e5; color: white; border: none; border-radius: 0.375rem; padding: 6px 12px; }
     .add-button.btn-danger { background-color: #ef4444; }
     .amount-purple {
-  color: #6b21a8; /* Purple */
-  font-size: 1.25rem;
-  font-weight: bold;
-}
+      color: #6b21a8; /* Purple */
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
   </style>
 </head>
-<link rel="stylesheet" href="../../css/admin_collection.css">
 <body>
-
   <div class="content">
     <header class="mb-4">
       <h1 class="header-title">Cash In/Out Management</h1>
@@ -58,6 +98,19 @@ $filtered = $collection->fetchCollections(1); // Fetch only school year ID 3
     </header>
 
 
+    <div class="mb-4">
+      <label for="schoolYearFilter" class="form-label">Filter by School Year:</label>
+      <select id="schoolYearFilter" class="form-select" onchange="applyYearFilter()">
+        <option value="">All</option>
+        <?php foreach ($schoolYears as $year): ?>
+          <option value="<?= $year['school_year_id']; ?>" <?= $selectedYear == $year['school_year_id'] ? 'selected' : ''; ?>>
+            <?= $year['school_year']; ?>
+          </option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+
+    <!-- Summary Section -->
     <div class="summary-buttons">
       <div class="button">
         <p>Total Cash In</p>
@@ -69,11 +122,11 @@ $filtered = $collection->fetchCollections(1); // Fetch only school year ID 3
       </div>
       <div class="button">
         <p>Net Income</p>
-        <p class="amount-purple">
-          ₱<?= number_format($netIncome, 2); ?>
-        </p>
+        <p class="amount-purple">₱<?= number_format($netIncome, 2); ?></p>
       </div>
     </div>
+
+    
 
     <!-- Cash In Table -->
     <div class="table-section">
@@ -99,8 +152,8 @@ $filtered = $collection->fetchCollections(1); // Fetch only school year ID 3
                 <i class="fas fa-edit text-warning" title="Edit"></i>
                 <i class="fas fa-trash text-danger" title="Delete"></i>
               </td>
-              <td><?= $cashIn['created_by_name']; ?></td>
-              <td><?= $cashIn['collection_date']; ?></td>
+              <td><?= htmlspecialchars($cashIn['created_by_name']); ?></td>
+              <td><?= htmlspecialchars($cashIn['collection_date']); ?></td>
               <td>₱<?= number_format($cashIn['amount'], 2); ?></td>
             </tr>
           <?php endforeach; ?>
@@ -139,10 +192,10 @@ $filtered = $collection->fetchCollections(1); // Fetch only school year ID 3
                 <i class="fas fa-edit text-warning" title="Edit"></i>
                 <i class="fas fa-trash text-danger" title="Delete"></i>
               </td>
-              <td><?= $cashOut['created_by_name']; ?></td>
-              <td><?= $cashOut['cashout_date']; ?></td>
-              <td><?= $cashOut['expense_details']; ?></td>
-              <td><?= $cashOut['expense_category']; ?></td>
+              <td><?= htmlspecialchars($cashOut['created_by_name']); ?></td>
+              <td><?= htmlspecialchars($cashOut['cashout_date']); ?></td>
+              <td><?= htmlspecialchars($cashOut['expense_details']); ?></td>
+              <td><?= htmlspecialchars($cashOut['expense_category']); ?></td>
               <td>₱<?= number_format($cashOut['amount'], 2); ?></td>
             </tr>
           <?php endforeach; ?>
@@ -156,33 +209,76 @@ $filtered = $collection->fetchCollections(1); // Fetch only school year ID 3
     </div>
   </div>
 
- 
+  <!-- Add Cash In Modal -->
+  <div class="modal fade" id="addCashInModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" method="POST" action="collection.php">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Cash In</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="action_type" value="add_cash_in">
+          <label for="collection_date" class="form-label">Date</label>
+          <input type="date" name="collection_date" class="form-control mb-3" required>
+          <label for="amount" class="form-label">Amount</label>
+          <input type="number" name="amount" class="form-control mb-3" placeholder="Enter Amount" required>
+          <label for="school_year_id" class="form-label">School Year</label>
+          <select name="school_year_id" class="form-select mb-3" required>
+            <option value="">Select School Year</option>
+            <?php foreach ($schoolYears as $year): ?>
+              <option value="<?= $year['school_year_id']; ?>"><?= $year['school_year']; ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Cash Out Modal -->
+  <div class="modal fade" id="addCashOutModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" method="POST" action="collection.php">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Cash Out</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="action_type" value="add_cash_out">
+          <label for="cashout_date" class="form-label">Date</label>
+          <input type="date" name="cashout_date" class="form-control mb-3" required>
+          <label for="amount" class="form-label">Amount</label>
+          <input type="number" name="amount" class="form-control mb-3" placeholder="Enter Amount" required>
+          <label for="expense_details" class="form-label">Details</label>
+          <input type="text" name="expense_details" class="form-control mb-3" placeholder="Enter Details" required>
+          <label for="expense_category" class="form-label">Category</label>
+          <input type="text" name="expense_category" class="form-control mb-3" placeholder="Enter Category" required>
+          <label for="school_year_id" class="form-label">School Year</label>
+          <select name="school_year_id" class="form-select mb-3" required>
+            <option value="">Select School Year</option>
+            <?php foreach ($schoolYears as $year): ?>
+              <option value="<?= $year['school_year_id']; ?>"><?= $year['school_year']; ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script>
-$(document).ready(function () {
-  // Fetch school years for dropdown
-  $.ajax({
-    url: '../../ajax/getSchoolYears.php',
-    method: 'GET',
-    success: function (res) {
-      if (res.success) {
-        $('#schoolYearFilter').append(`<option value="">All</option>`);
-        res.data.forEach(year => {
-          $('#schoolYearFilter').append(`<option value="${year.school_year_id}">${year.school_year}</option>`);
-        });
-      }
+
+    function applyYearFilter() {
+      const selectedYear = document.getElementById('schoolYearFilter').value;
+      window.location.href = `?school_year_id=${selectedYear}`;
     }
-  });
 
-  $('#applyFilter').on('click', function () {
-    const selectedYear = $('#schoolYearFilter').val();
-
-    // Redirect with filter as a GET parameter (for now, PHP will handle filtering)
-    window.location.href = `?school_year_id=${selectedYear}`;
-  });
-});
-
-</script>
-
+    
+  </script>
 </body>
 </html>
